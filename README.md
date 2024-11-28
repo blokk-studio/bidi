@@ -1,5 +1,7 @@
 # bidi
 
+monorepo for the new https://www.bidigut.ch/ nft app.
+
 ## setup
 
 ```
