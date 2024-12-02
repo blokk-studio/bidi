@@ -9,7 +9,7 @@ importers:
   frontend:
     devDependencies:
       '@hashgraph/sdk':
-        specifier: ^2.53.0
+        specifier: 2.53.0
         version: 2.53.0
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0
