@@ -1,0 +1,36 @@
+name: continuous integration
+
+on:
+  - push
+
+jobs:
+  lint frontend:
+    steps:
+      # setup
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "pnpm"
+      - run: pnpm install
+      # script
+      - run: pnpm -C frontend lint:eslint
+      - run: pnpm -C frontend lint:prettier
+      - run: pnpm -C frontend check
+
+  build frontend:
+    # setup
+    - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v4
+      with:
+        version: 9
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+        cache: "pnpm"
+    - run: pnpm install
+    # script
+    - run: pnpm -C frontend build
