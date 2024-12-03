@@ -9,7 +9,7 @@ jobs:
     env:
       HEDERA_ACCOUNT_ID: ${{ secrets.HEDERA_ACCOUNT_ID }}
       HEDERA_PRIVATE_KEY: ${{ secrets.HEDERA_PRIVATE_KEY }}
-      HEDERA_ENVIRONMENT: ${{ env.HEDERA_ENVIRONMENT }}
+      HEDERA_ENVIRONMENT: ${{ vars.HEDERA_ENVIRONMENT }}
     steps:
       # setup
       - uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
     env:
       HEDERA_ACCOUNT_ID: ${{ secrets.HEDERA_ACCOUNT_ID }}
       HEDERA_PRIVATE_KEY: ${{ secrets.HEDERA_PRIVATE_KEY }}
-      HEDERA_ENVIRONMENT: ${{ env.HEDERA_ENVIRONMENT }}
+      HEDERA_ENVIRONMENT: ${{ vars.HEDERA_ENVIRONMENT }}
     steps:
       # setup
       - uses: actions/checkout@v4
