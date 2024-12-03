@@ -6,6 +6,11 @@ on:
 jobs:
   lint_frontend:
     runs-on: ubuntu-latest
+    secrets:
+      HEDERA_ACCOUNT_ID: ${{ secrets.HEDERA_ACCOUNT_ID }}
+      HEDERA_PRIVATE_KEY: ${{ secrets.HEDERA_PRIVATE_KEY }}
+    env:
+      HEDERA_ENVIRONMENT: ${{ env.HEDERA_ENVIRONMENT }}
     steps:
       # setup
       - uses: actions/checkout@v4
@@ -24,6 +29,11 @@ jobs:
 
   build_frontend:
     runs-on: ubuntu-latest
+    secrets:
+      HEDERA_ACCOUNT_ID: ${{ secrets.HEDERA_ACCOUNT_ID }}
+      HEDERA_PRIVATE_KEY: ${{ secrets.HEDERA_PRIVATE_KEY }}
+    env:
+      HEDERA_ENVIRONMENT: ${{ env.HEDERA_ENVIRONMENT }}
     steps:
       # setup
       - uses: actions/checkout@v4
