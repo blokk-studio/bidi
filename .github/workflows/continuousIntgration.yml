@@ -6,10 +6,9 @@ on:
 jobs:
   lint_frontend:
     runs-on: ubuntu-latest
-    secrets:
+    env:
       HEDERA_ACCOUNT_ID: ${{ secrets.HEDERA_ACCOUNT_ID }}
       HEDERA_PRIVATE_KEY: ${{ secrets.HEDERA_PRIVATE_KEY }}
-    env:
       HEDERA_ENVIRONMENT: ${{ env.HEDERA_ENVIRONMENT }}
     steps:
       # setup
@@ -29,10 +28,9 @@ jobs:
 
   build_frontend:
     runs-on: ubuntu-latest
-    secrets:
+    env:
       HEDERA_ACCOUNT_ID: ${{ secrets.HEDERA_ACCOUNT_ID }}
       HEDERA_PRIVATE_KEY: ${{ secrets.HEDERA_PRIVATE_KEY }}
-    env:
       HEDERA_ENVIRONMENT: ${{ env.HEDERA_ENVIRONMENT }}
     steps:
       # setup
