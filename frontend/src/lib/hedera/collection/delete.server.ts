@@ -42,13 +42,14 @@ export async function deleteCollection(tokenId: string) {
 			status: transactionStatus.toString(),
 			message: `Token ${tokenId} deleted successfully`,
 		}
-	} catch (error) {
-		console.error('Failed to delete token:', error)
+	} catch (throwable) {
+		console.error('Failed to delete token:', throwable)
+		const error = throwable instanceof Error ? throwable : new Error(String(throwable))
 
 		if (error.message?.includes('TOKEN_IS_IMMUTABLE')) {
 			// todo look for other cases too
 			throw new Error('This token cannot be deleted as it is immutable')
 		}
-		throw error
+		throw throwable
 	}
 }

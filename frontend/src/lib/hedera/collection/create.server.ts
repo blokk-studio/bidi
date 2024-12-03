@@ -55,6 +55,11 @@ export async function createCollection({ name, symbol, maxSupply = 250 }: Create
 
 		// Get the token ID
 		const tokenId = receipt.tokenId
+		if (!tokenId) {
+			throw new Error(
+				`NFT collection creation transaction receipt does not contain a token id. The transaction status is ${JSON.stringify(receipt.status)}.`,
+			)
+		}
 
 		console.log(`Created NFT collection with ID: ${tokenId}`)
 		console.log(`View on HashScan: https://hashscan.io/testnet/token/${tokenId}`)
