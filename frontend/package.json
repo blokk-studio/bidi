@@ -9,7 +9,9 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint ."
+		"lint:eslint": "eslint .",
+		"lint:prettier": "prettier --check .",
+		"lint": "pnpm lint:eslint && pnpm lint:prettier"
 	},
 	"devDependencies": {
 		"@hashgraph/sdk": "2.53.0",
