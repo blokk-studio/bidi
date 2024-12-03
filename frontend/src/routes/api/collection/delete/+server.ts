@@ -11,7 +11,8 @@ export async function DELETE({ url }) {
 
 		const result = await deleteCollection(tokenId)
 		return json(result)
-	} catch (error) {
+	} catch (throwable) {
+		const error = throwable instanceof Error ? throwable : new Error(String(throwable))
 		return json({ error: error.message }, { status: 500 })
 	}
 }

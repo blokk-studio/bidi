@@ -21,8 +21,9 @@ export async function POST({ request }) {
 		})
 
 		return json(result)
-	} catch (error) {
-		console.error('Collection creation failed:', error)
+	} catch (throwable) {
+		console.error('Collection creation failed:', throwable)
+		const error = throwable instanceof Error ? throwable : new Error(String(throwable))
 		return json({ error: error.message }, { status: 500 })
 	}
 }
