@@ -20,7 +20,7 @@ jobs:
       # script
       - run: pnpm -C frontend lint:eslint
       - run: pnpm -C frontend lint:prettier
-      - run: pnpm -C frontend check
+      - run: pnpm -C frontend lint:svelte
 
   build_frontend:
     runs-on: ubuntu-latest
