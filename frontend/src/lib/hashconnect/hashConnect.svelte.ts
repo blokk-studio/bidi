@@ -1,6 +1,7 @@
 import { dev } from '$app/environment'
 import { PUBLIC_HASHCONNECT_PROJECT_ID } from '$env/static/public'
-import { LedgerId } from '@hashgraph/sdk'
+import type { Execute } from '$lib/hedera/Execute'
+import { AccountId, LedgerId } from '@hashgraph/sdk'
 import { untrack } from 'svelte'
 import { HashConnect, type SessionData } from 'virtual:hashconnect'
 import { dappMetadata } from './dappMetadata'
@@ -19,44 +20,61 @@ type NetworkName = 'testnet' | 'mainnet'
 interface ReactiveHashConnectSession {
 	/** the user's account id in its string representation */
 	accountIdString: AccountIdString
+	accountId: AccountId
 	/** the name of the chain we're currently sending transactions to */
 	networkName: NetworkName
+	disconnect: () => void
+	execute: Execute
 }
 
 /**
  * a custom interface to hashconnect with reactive state that exposes only the things we need
  */
-export interface ReactiveHashConnect extends Pick<HashConnect, 'openPairingModal' | 'disconnect'> {
+export interface ReactiveHashConnect {
 	/**
 	 * the current hashconnect session, if paired
 	 *
 	 * is `undefined` if not paired or no account id is available in the hashconnect session
 	 */
-	session?: ReactiveHashConnectSession
+	readonly session?: ReactiveHashConnectSession
 	/**
 	 * the ledger id setting reflecting the chain the user would like to use
 	 *
 	 * does not reflect the current connection/session unlike {@link ReactiveHashConnectSession.networkName}.
 	 */
 	ledgerId: LedgerId
+	connect: () => void
 }
 
-const getSession = (sessionData?: SessionData): ReactiveHashConnectSession | undefined => {
-	if (!sessionData) {
-		return
-	}
-
-	const firstAccountIdString = sessionData.accountIds[0]
+const getSession = (options: {
+	hashConnectInstance: HashConnect
+	sessionData: SessionData
+}): ReactiveHashConnectSession | undefined => {
+	const firstAccountIdString = options.sessionData.accountIds[0]
 	if (!firstAccountIdString) {
 		return
 	}
 
-	const networkName = sessionData.network
+	const networkName = options.sessionData.network
+	const accountId = AccountId.fromString(firstAccountIdString)
+	const disconnect = options.hashConnectInstance.disconnect.bind(hashConnectInstance)
+	const execute: Execute = (query) => {
+		const signer = options.hashConnectInstance.getSigner(
+			accountId as unknown as Parameters<HashConnect['getSigner']>[0],
+		)
+
+		return query.executeWithSigner(
+			signer as unknown as Parameters<(typeof query)['executeWithSigner']>[0],
+		)
+	}
 
 	// plain string values for now, but might be replaced by AccountId & LedgerId
 	return {
 		accountIdString: firstAccountIdString as AccountIdString,
 		networkName: networkName as NetworkName,
+		accountId,
+		disconnect,
+		execute,
 	}
 }
 
@@ -64,14 +82,13 @@ let ledgerId = $state(LedgerId.TESTNET)
 let hashConnectInstance = $state<HashConnect>()
 let hasHashConnectInstanceInitialized = $state(false)
 let sessionData = $state<SessionData>()
-const hashConnect = $derived.by(() => {
+const hashConnect = $derived.by((): ReactiveHashConnect | undefined => {
 	if (!hashConnectInstance || !hasHashConnectInstanceInitialized) {
 		return
 	}
 
-	const openPairingModal = hashConnectInstance.openPairingModal.bind(hashConnectInstance)
-	const disconnect = hashConnectInstance.disconnect.bind(hashConnectInstance)
-	const session = $derived(getSession(sessionData))
+	const connect = hashConnectInstance.openPairingModal.bind(hashConnectInstance)
+	const session = $derived(sessionData && getSession({ sessionData, hashConnectInstance }))
 
 	return {
 		// ledger id is read-write
@@ -81,17 +98,13 @@ const hashConnect = $derived.by(() => {
 		set ledgerId(newLedgerId) {
 			ledgerId = newLedgerId
 		},
+		// readonly pairing initialization method
+		get connect() {
+			return connect
+		},
 		// readonly session
 		get session() {
 			return session
-		},
-		// readonly pairing initialization method
-		get openPairingModal() {
-			return openPairingModal
-		},
-		// readonly disconnection method
-		get disconnect() {
-			return disconnect
 		},
 	}
 })
