@@ -109,8 +109,30 @@ const hashConnect = $derived.by((): ReactiveHashConnect | undefined => {
 	}
 })
 
-// re-create the hashconnect instance whenever the ledger id changes
+const startSubscribing = (hashConnectInstance: HashConnect) => {
+	// set up event subscribers
+	const updateSessionData = (newSessionData: SessionData) => {
+		sessionData = newSessionData
+	}
+	const unsetSessionData = () => {
+		sessionData = undefined
+	}
+
+	hashConnectInstance.pairingEvent.on(updateSessionData)
+	hashConnectInstance.disconnectionEvent.on(unsetSessionData)
+
+	return () => {
+		hashConnectInstance.pairingEvent.off(updateSessionData)
+		hashConnectInstance.disconnectionEvent.off(unsetSessionData)
+	}
+}
+
+export const useHashConnect = () => {
+	return hashConnect
+}
+
 $effect.root(() => {
+	// recreate the hashconnect instance whenever the ledger id changes
 	$effect(() => {
 		// access the value to trigger reactivity
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -134,58 +156,21 @@ $effect.root(() => {
 			})
 		})
 	})
+
+	// subscribe whenever the hashconnect instance changes
+	$effect(() => {
+		// don't do anything if there is no instance
+		if (!hashConnectInstance) {
+			return
+		}
+
+		const stopSubscribing = startSubscribing(hashConnectInstance)
+
+		// when the effect is destroyed
+		const destroy = () => {
+			stopSubscribing()
+		}
+
+		return destroy
+	})
 })
-
-// create a function to subscribe to hashconnect events whenever it's used in a reactive context
-// based on https://www.matsimon.dev/blog/svelte-in-depth-effect-tracking
-let numberOfSubscribers = 0
-const startSubscribing = (hashConnectInstance: HashConnect) => {
-	// set up event subscribers
-	const updateSessionData = (newSessionData: SessionData) => {
-		sessionData = newSessionData
-	}
-	const unsetSessionData = () => {
-		sessionData = undefined
-	}
-
-	hashConnectInstance.pairingEvent.on(updateSessionData)
-	hashConnectInstance.disconnectionEvent.on(unsetSessionData)
-
-	return () => {
-		hashConnectInstance.pairingEvent.off(updateSessionData)
-		hashConnectInstance.disconnectionEvent.off(unsetSessionData)
-	}
-}
-let stopSubscribing: (() => void) | null = null
-export const useHashConnect = () => {
-	if ($effect.tracking()) {
-		// this will also re-run whenever the hashconnect instance state changes
-		$effect(() => {
-			// don't do anything if there is no instance yet
-			if (!hashConnectInstance) {
-				return
-			}
-
-			if (numberOfSubscribers === 0) {
-				stopSubscribing = startSubscribing(hashConnectInstance)
-			}
-
-			numberOfSubscribers++
-
-			// when the effect is destroyed
-			const destroy = () => {
-				numberOfSubscribers--
-
-				// the last effect that is destroyed must also remove all event listeners
-				if (numberOfSubscribers === 0) {
-					stopSubscribing?.()
-					stopSubscribing = null
-				}
-			}
-
-			return destroy
-		})
-	}
-
-	return hashConnect
-}
