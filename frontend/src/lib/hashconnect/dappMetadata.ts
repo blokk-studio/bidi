@@ -1,4 +1,4 @@
-import type { DappMetadata } from '@hashgraph/hashconnect'
+import type { DappMetadata } from 'virtual:hashconnect'
 
 export const dappMetadata: DappMetadata = {
 	name: 'BIDI',
