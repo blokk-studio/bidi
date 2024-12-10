@@ -32,18 +32,23 @@ interface ReactiveHashConnectSession {
  */
 export interface ReactiveHashConnect {
 	/**
+	 * the ledger id setting reflecting the chain the user would like to use
+	 *
+	 * does not reflect the current connection/session unlike {@link ReactiveHashConnectSession.networkName}.
+	 */
+	ledgerId: LedgerId
+	/**
 	 * the current hashconnect session, if paired
 	 *
 	 * is `undefined` if not paired or no account id is available in the hashconnect session
 	 */
 	readonly session?: ReactiveHashConnectSession
 	/**
-	 * the ledger id setting reflecting the chain the user would like to use
+	 * the function to connect to the wallet
 	 *
-	 * does not reflect the current connection/session unlike {@link ReactiveHashConnectSession.networkName}.
+	 * is undefined while the extension is initializing
 	 */
-	ledgerId: LedgerId
-	connect: () => void
+	readonly connect?: () => void
 }
 
 const getSession = (options: {
@@ -82,31 +87,25 @@ let ledgerId = $state(LedgerId.TESTNET)
 let hashConnectInstance = $state<HashConnect>()
 let hasHashConnectInstanceInitialized = $state(false)
 let sessionData = $state<SessionData>()
-const hashConnect = $derived.by((): ReactiveHashConnect | undefined => {
+const session = $derived.by(() => {
+	if (!hashConnectInstance || !hasHashConnectInstanceInitialized) {
+		return
+	}
+
+	if (!sessionData) {
+		return
+	}
+
+	return getSession({ sessionData, hashConnectInstance })
+})
+const connect = $derived.by(() => {
 	if (!hashConnectInstance || !hasHashConnectInstanceInitialized) {
 		return
 	}
 
 	const connect = hashConnectInstance.openPairingModal.bind(hashConnectInstance)
-	const session = $derived(sessionData && getSession({ sessionData, hashConnectInstance }))
 
-	return {
-		// ledger id is read-write
-		get ledgerId() {
-			return ledgerId
-		},
-		set ledgerId(newLedgerId) {
-			ledgerId = newLedgerId
-		},
-		// readonly pairing initialization method
-		get connect() {
-			return connect
-		},
-		// readonly session
-		get session() {
-			return session
-		},
-	}
+	return connect
 })
 
 const startSubscribing = (hashConnectInstance: HashConnect) => {
@@ -125,10 +124,6 @@ const startSubscribing = (hashConnectInstance: HashConnect) => {
 		hashConnectInstance.pairingEvent.off(updateSessionData)
 		hashConnectInstance.disconnectionEvent.off(unsetSessionData)
 	}
-}
-
-export const useHashConnect = () => {
-	return hashConnect
 }
 
 $effect.root(() => {
@@ -174,3 +169,21 @@ $effect.root(() => {
 		return destroy
 	})
 })
+
+export const hashConnect = {
+	// ledger id is read-write
+	get ledgerId() {
+		return ledgerId
+	},
+	set ledgerId(newLedgerId) {
+		ledgerId = newLedgerId
+	},
+	// readonly pairing initialization method
+	get connect() {
+		return connect
+	},
+	// readonly session
+	get session() {
+		return session
+	},
+}
