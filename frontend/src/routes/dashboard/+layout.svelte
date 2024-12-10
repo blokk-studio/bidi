@@ -11,12 +11,12 @@
 			Connected to {hashConnect.session.networkName} with {hashConnect.session.accountIdString}
 
 			{#if hashConnect.session}
-				<button onclick={hashConnect.disconnect}>disconnect</button>
+				<button onclick={hashConnect.session.disconnect}>disconnect</button>
 			{/if}
 		{:else}
 			<button
 				onclick={() => {
-					hashConnect.openPairingModal()
+					hashConnect.connect()
 				}}
 			>
 				Connect HashPack
