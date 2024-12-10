@@ -14,7 +14,7 @@
 		"lint": "pnpm lint:eslint && pnpm lint:prettier && pnpm lint:svelte"
 	},
 	"devDependencies": {
-		"@hashgraph/sdk": "2.53.0",
+		"@hashgraph/sdk": "2.41.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",

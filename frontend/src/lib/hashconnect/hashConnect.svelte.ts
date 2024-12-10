@@ -64,13 +64,9 @@ const getSession = (options: {
 	const accountId = AccountId.fromString(firstAccountIdString)
 	const disconnect = options.hashConnectInstance.disconnect.bind(hashConnectInstance)
 	const execute: Execute = (query) => {
-		const signer = options.hashConnectInstance.getSigner(
-			accountId as unknown as Parameters<HashConnect['getSigner']>[0],
-		)
+		const signer = options.hashConnectInstance.getSigner(accountId)
 
-		return query.executeWithSigner(
-			signer as unknown as Parameters<(typeof query)['executeWithSigner']>[0],
-		)
+		return query.executeWithSigner(signer)
 	}
 
 	// plain string values for now, but might be replaced by AccountId & LedgerId
