@@ -1,3 +1,3 @@
-import type { Query } from '@hashgraph/sdk'
+import type { Transaction, TransactionReceipt } from '@hashgraph/sdk'
 
-export type Execute = <QueryOutput>(query: Query<QueryOutput>) => Promise<QueryOutput>
+export type ExecuteTransaction = (transaction: Transaction) => Promise<TransactionReceipt>
