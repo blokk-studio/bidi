@@ -29,7 +29,7 @@ export interface ReactiveHashConnect {
 	 *
 	 * does not reflect the current connection/session unlike {@link ReactiveHashConnectSession['ledgerId']}.
 	 */
-	ledgerId: LedgerId
+	selectedLedgerId: LedgerId
 	/**
 	 * the current hashconnect session, if paired
 	 *
@@ -76,7 +76,7 @@ const getSession = (options: {
 	}
 }
 
-let ledgerId = $state(LedgerId.TESTNET)
+let selectedLedgerId = $state(LedgerId.TESTNET)
 let hashConnectInstance = $state<HashConnect>()
 let hasHashConnectInstanceInitialized = $state(false)
 let sessionData = $state<SessionData>()
@@ -124,7 +124,7 @@ $effect.root(() => {
 	$effect(() => {
 		// access the value to trigger reactivity
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		ledgerId
+		selectedLedgerId
 
 		// only re-run this when the ledger id changes (infinite loop)
 		untrack(() => {
@@ -132,7 +132,7 @@ $effect.root(() => {
 			hasHashConnectInstanceInitialized = false
 
 			hashConnectInstance = new HashConnect(
-				ledgerId,
+				selectedLedgerId,
 				PUBLIC_HASHCONNECT_PROJECT_ID,
 				dappMetadata,
 				// debug during development
@@ -163,13 +163,13 @@ $effect.root(() => {
 	})
 })
 
-export const hashConnect = {
+export const hashConnect: ReactiveHashConnect = {
 	// ledger id is read-write
-	get ledgerId() {
-		return ledgerId
+	get selectedLedgerId() {
+		return selectedLedgerId
 	},
-	set ledgerId(newLedgerId) {
-		ledgerId = newLedgerId
+	set selectedLedgerId(newLedgerId) {
+		selectedLedgerId = newLedgerId
 	},
 	// readonly pairing initialization method
 	get connect() {
