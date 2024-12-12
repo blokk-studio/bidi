@@ -23,7 +23,7 @@
 			</button>
 		{/if}
 
-		<select bind:value={hashConnect.ledgerId}>
+		<select bind:value={hashConnect.selectedLedgerId}>
 			<option value={LedgerId.TESTNET}>{LedgerId.TESTNET}</option>
 			<option value={LedgerId.MAINNET}>{LedgerId.MAINNET}</option>
 		</select>
