@@ -2,6 +2,7 @@ import { dev } from '$app/environment'
 import { PUBLIC_HASHCONNECT_PROJECT_ID } from '$env/static/public'
 import type { ExecuteTransaction } from '$lib/hedera/Execute'
 import { AccountId, LedgerId } from '@hashgraph/sdk'
+import type { HashConnectSigner } from 'hashconnect/dist/signer'
 import { untrack } from 'svelte'
 import { HashConnect, type SessionData } from 'virtual:hashconnect'
 import { dappMetadata } from './dappMetadata'
@@ -10,10 +11,10 @@ import { dappMetadata } from './dappMetadata'
  * a custom representation of session data in a format most useful to us
  */
 interface ReactiveHashConnectSession {
-	/** the id of the account that's currently connected */
-	accountId: AccountId
 	/** the id of the chain that the account is currently connected to */
 	ledgerId: LedgerId
+	/** the id of the account that's currently connected */
+	accountId: AccountId
 	/** disconnects the dapp from the wallet and removes the session data */
 	disconnect: () => void
 	/** executes any transaction from @hashgraph/sdk with the wallet */
@@ -50,13 +51,21 @@ const getSession = (options: {
 	hashConnectInstance: HashConnect
 	sessionData: SessionData
 }): ReactiveHashConnectSession | undefined => {
-	const firstAccountIdString = options.sessionData.accountIds[0]
-	if (!firstAccountIdString) {
+	let signer: HashConnectSigner | undefined = undefined
+	for (const accountId of options.hashConnectInstance.connectedAccountIds) {
+		try {
+			signer = options.hashConnectInstance.getSigner(accountId)
+			break
+		} catch {
+			// no session for the current chain
+		}
+	}
+	if (!signer) {
 		return
 	}
 
-	const ledgerId = LedgerId.fromString(options.sessionData.network)
-	const accountId = AccountId.fromString(firstAccountIdString)
+	const ledgerId = signer.getLedgerId()
+	const accountId = signer.getAccountId()
 	const disconnect = options.hashConnectInstance.disconnect.bind(hashConnectInstance)
 	const executeTransaction: ExecuteTransaction = async (transaction) => {
 		// there are irrelevant inconsistencies between the internal properties of the types from different versions of @hashgraph/sdk
@@ -69,8 +78,8 @@ const getSession = (options: {
 	}
 
 	return {
-		accountId,
 		ledgerId,
+		accountId,
 		disconnect,
 		executeTransaction,
 	}
