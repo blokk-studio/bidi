@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { hashConnect as hashConnect } from '$lib/hashconnect/hashConnect.svelte'
 	import { getCollections, type TokenInfo } from '$lib/hedera/collection/get'
-	import { onMount } from 'svelte'
 
 	let loading = $state(false)
 	let error = $state('')
