@@ -23,12 +23,7 @@
 			</button>
 		{/if}
 
-		<select
-			value={hashConnect.ledgerId}
-			oninput={(event) => {
-				hashConnect.ledgerId = LedgerId.fromString(event.currentTarget.value)
-			}}
-		>
+		<select bind:value={hashConnect.ledgerId}>
 			<option value={LedgerId.TESTNET}>{LedgerId.TESTNET}</option>
 			<option value={LedgerId.MAINNET}>{LedgerId.MAINNET}</option>
 		</select>
