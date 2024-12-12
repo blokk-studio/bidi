@@ -21,7 +21,7 @@
 
 <script lang="ts">
 	import type { Snippet } from 'svelte'
-	import { hashConnect, type ReactiveHashConnect } from '../../lib/hashconnect/hashConnect.svelte'
+	import { hashConnect, type ReactiveHashConnect } from './hashConnect.svelte'
 
 	let {
 		paired,
