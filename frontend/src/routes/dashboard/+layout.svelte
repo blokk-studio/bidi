@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { LedgerId } from '@hashgraph/sdk'
-	import HashConnectLoader from './HashConnectLoader.svelte'
+	import HashConnectLoader from '$lib/hashconnect/HashConnectLoader.svelte'
 
 	let { children } = $props()
 </script>
