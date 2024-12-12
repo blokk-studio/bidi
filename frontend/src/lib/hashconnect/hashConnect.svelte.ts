@@ -1,30 +1,23 @@
 import { dev } from '$app/environment'
 import { PUBLIC_HASHCONNECT_PROJECT_ID } from '$env/static/public'
-import type { Execute } from '$lib/hedera/Execute'
+import type { ExecuteTransaction } from '$lib/hedera/Execute'
 import { AccountId, LedgerId } from '@hashgraph/sdk'
 import { untrack } from 'svelte'
 import { HashConnect, type SessionData } from 'virtual:hashconnect'
 import { dappMetadata } from './dappMetadata'
 
-/** an accurate type to reflect account id strings */
-type AccountIdString = `${number}.${number}.${number}`
-/** an accurate type union to reflect the possible network names */
-type NetworkName = 'testnet' | 'mainnet'
 /**
  * a custom representation of session data in a format most useful to us
- *
- * the property names are intentionally different to distinguish them from @hashgraph/sdk exports such as AccountId & LedgerId.
- *
- * the string properties might be replaced by @hashgraph/sdk's AccountId & LedgerId later on.
  */
 interface ReactiveHashConnectSession {
-	/** the user's account id in its string representation */
-	accountIdString: AccountIdString
+	/** the id of the account that's currently connected */
 	accountId: AccountId
-	/** the name of the chain we're currently sending transactions to */
-	networkName: NetworkName
+	/** the id of the chain that the account is currently connected to */
+	ledgerId: LedgerId
+	/** disconnects the dapp from the wallet and removes the session data */
 	disconnect: () => void
-	execute: Execute
+	/** executes any transaction from @hashgraph/sdk with the wallet */
+	executeTransaction: ExecuteTransaction
 }
 
 /**
@@ -34,7 +27,7 @@ export interface ReactiveHashConnect {
 	/**
 	 * the ledger id setting reflecting the chain the user would like to use
 	 *
-	 * does not reflect the current connection/session unlike {@link ReactiveHashConnectSession.networkName}.
+	 * does not reflect the current connection/session unlike {@link ReactiveHashConnectSession['ledgerId']}.
 	 */
 	ledgerId: LedgerId
 	/**
@@ -46,7 +39,9 @@ export interface ReactiveHashConnect {
 	/**
 	 * the function to connect to the wallet
 	 *
-	 * is undefined while the extension is initializing
+	 * hashconnect is initialized and ready to pair if this function is defined.
+	 *
+	 * is `undefined` while initializing.
 	 */
 	readonly connect?: () => void
 }
@@ -60,22 +55,24 @@ const getSession = (options: {
 		return
 	}
 
-	const networkName = options.sessionData.network
+	const ledgerId = LedgerId.fromString(options.sessionData.network)
 	const accountId = AccountId.fromString(firstAccountIdString)
 	const disconnect = options.hashConnectInstance.disconnect.bind(hashConnectInstance)
-	const execute: Execute = (query) => {
-		const signer = options.hashConnectInstance.getSigner(accountId)
+	const executeTransaction: ExecuteTransaction = async (transaction) => {
+		// there are irrelevant inconsistencies between the internal properties of the types from different versions of @hashgraph/sdk
+		const transactionReceipt = await options.hashConnectInstance.sendTransaction(
+			accountId as unknown as Parameters<HashConnect['sendTransaction']>[0],
+			transaction as unknown as Parameters<HashConnect['sendTransaction']>[1],
+		)
 
-		return query.executeWithSigner(signer)
+		return transactionReceipt as unknown as ReturnType<ExecuteTransaction>
 	}
 
-	// plain string values for now, but might be replaced by AccountId & LedgerId
 	return {
-		accountIdString: firstAccountIdString as AccountIdString,
-		networkName: networkName as NetworkName,
 		accountId,
+		ledgerId,
 		disconnect,
-		execute,
+		executeTransaction,
 	}
 }
 

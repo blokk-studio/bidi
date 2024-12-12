@@ -8,7 +8,7 @@
 <HashConnectLoader>
 	{#snippet children({ hashConnect })}
 		{#if hashConnect.session}
-			Connected to {hashConnect.session.networkName} with {hashConnect.session.accountIdString}
+			Connected to {hashConnect.session.ledgerId.toString()} with {hashConnect.session.accountId.toString()}
 
 			{#if hashConnect.session}
 				<button onclick={hashConnect.session.disconnect}>disconnect</button>
