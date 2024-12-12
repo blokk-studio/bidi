@@ -8,15 +8,15 @@
 		symbol?: string
 	}
 
-	let loading = false
-	let error = ''
-	let success = ''
-	let collections: TokenInfo[] = []
+	let loading = $state(false)
+	let error = $state('')
+	let success = $state('')
+	let collections: TokenInfo[] = $state([])
 
 	// create collection form data
-	let collectionName = ''
-	let collectionSymbol = ''
-	let creatingCollection = false
+	let collectionName = $state('')
+	let collectionSymbol = $state('')
+	let creatingCollection = $state(false)
 
 	const fetchCollections = async () => {
 		const response = await fetch('/api/collection/get')
@@ -117,7 +117,13 @@
 	<div class="create-form">
 		<h2>Create New Collection</h2>
 
-		<form on:submit|preventDefault={handleSubmitCollection}>
+		<form
+			onsubmit={(event) => {
+				event.preventDefault()
+
+				handleSubmitCollection()
+			}}
+		>
 			<div class="form-group">
 				<label for="name">Collection Name:</label>
 				<input
@@ -177,7 +183,7 @@
 								View on HashScan
 							</a>
 							{#if !token.isDeleted}
-								<button class="delete-button" on:click={() => handleDelete(token.tokenId)}>
+								<button class="delete-button" onclick={() => handleDelete(token.tokenId)}>
 									Delete
 								</button>
 							{/if}
