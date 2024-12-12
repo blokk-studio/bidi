@@ -1,12 +1,7 @@
 <script lang="ts">
+	import { hashConnect as hashConnect } from '$lib/hashconnect/hashConnect.svelte'
+	import { getCollections, type TokenInfo } from '$lib/hedera/collection/get'
 	import { onMount } from 'svelte'
-
-	interface TokenInfo {
-		tokenId: string
-		isDeleted: boolean
-		name?: string
-		symbol?: string
-	}
 
 	let loading = $state(false)
 	let error = $state('')
@@ -19,12 +14,16 @@
 	let creatingCollection = $state(false)
 
 	const fetchCollections = async () => {
-		const response = await fetch('/api/collection/get')
-		if (!response.ok) {
-			throw new Error('Failed to fetch collections')
+		if (!hashConnect.session) {
+			return []
 		}
-		const data = await response.json()
-		return data.collections
+
+		const collections = await getCollections({
+			ledgerId: hashConnect.session.ledgerId,
+			accountId: hashConnect.session.accountId,
+		})
+
+		return collections
 	}
 
 	const createNewCollection = async (name: string, symbol: string) => {
@@ -98,16 +97,18 @@
 		}
 	}
 
-	onMount(async () => {
-		try {
-			loading = true
-			collections = await fetchCollections()
-			console.log(collections)
-		} catch (throwable) {
-			error = throwable instanceof Error ? throwable.message : String(throwable)
-		} finally {
-			loading = false
-		}
+	$effect(() => {
+		loading = true
+		fetchCollections()
+			.then((tokenInfos) => {
+				collections = tokenInfos
+			})
+			.catch((throwable) => {
+				error = throwable instanceof Error ? throwable.message : String(throwable)
+			})
+			.finally(() => {
+				loading = false
+			})
 	})
 </script>
 

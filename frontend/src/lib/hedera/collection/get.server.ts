@@ -3,14 +3,9 @@
 import { HEDERA_ACCOUNT_ID } from '$env/static/private'
 import { environmentSetup } from '$lib/hedera'
 import { AccountBalanceQuery, AccountId, TokenId, TokenInfoQuery } from '@hashgraph/sdk'
+import type { TokenInfo } from './get'
 
-interface TokenInfo {
-	tokenId: string
-	isDeleted: boolean
-	name?: string
-	symbol?: string
-}
-
+/** @deprecated use universal getter from ./get.ts */
 export async function getCollections(): Promise<TokenInfo[]> {
 	try {
 		const client = environmentSetup()
