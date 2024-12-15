@@ -1,0 +1,19 @@
+{
+  "name": "@bidi/contracts",
+  "version": "1.0.0",
+  "scripts": {
+    "clean": "npx hardhat clean && rm -rf cache artifacts typechain-types",
+    "compile": "hardhat compile"
+  },
+  "files": [
+    "dist",
+    "artifacts"
+  ],
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@types/node": "^20.11.16",
+    "hardhat": "^2.19.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
