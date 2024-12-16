@@ -1,7 +1,7 @@
 import { PUBLIC_IPFS_GATEWAY_BASE_URL } from '$env/static/public'
 import type { IpfsUri, Nft } from '$lib/nft'
 import { LedgerId, TokenId } from '@hashgraph/sdk'
-import { nftUtils as getNftUtils } from 'virtual:mirrorNode'
+import { nftUtils as getNftUtils } from '@tikz/hedera-mirror-node-ts'
 import { MirrorNodeClient } from './MirrorNodeClient'
 
 export type GetNfts = (options: {
