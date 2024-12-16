@@ -1,5 +1,5 @@
 import { AccountId, LedgerId } from '@hashgraph/sdk'
-import { TokenTypeFilter, tokenUtils as getTokenUtils } from 'virtual:mirrorNode'
+import { TokenTypeFilter, tokenUtils as getTokenUtils } from '@tikz/hedera-mirror-node-ts'
 import { MirrorNodeClient } from '../MirrorNodeClient'
 
 export interface TokenInfo {

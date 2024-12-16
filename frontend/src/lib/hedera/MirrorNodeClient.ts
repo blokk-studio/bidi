@@ -1,5 +1,5 @@
 import { LedgerId } from '@hashgraph/sdk'
-import type { Client, Params } from 'virtual:mirrorNode'
+import type { Client, Params } from '@tikz/hedera-mirror-node-ts'
 
 export const getMirrorNodeUrl = (ledgerId: LedgerId) => {
 	switch (ledgerId) {
