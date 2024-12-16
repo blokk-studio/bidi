@@ -3,15 +3,18 @@
   "version": "1.0.0",
   "scripts": {
     "clean": "npx hardhat clean && rm -rf cache artifacts typechain-types",
-    "compile": "hardhat compile"
+    "compile": "hardhat compile",
+    "deploy": "ts-node scripts/deploy.ts"
   },
   "files": [
     "dist",
     "artifacts"
   ],
   "devDependencies": {
+    "@hashgraph/sdk": "2.41.0",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@types/node": "^20.11.16",
+    "dotenv": "^16.4.7",
     "hardhat": "^2.19.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
