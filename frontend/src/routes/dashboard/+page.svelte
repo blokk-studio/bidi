@@ -41,6 +41,21 @@
 		return response.json()
 	}
 
+	const deployContract = async () => {
+		const response = await fetch('/api/collection/deploy', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+
+		if (!response.ok) {
+			throw new Error('Failed to create collection')
+		}
+
+		return response.json()
+	}
+
 	const handleSubmitCollection = async () => {
 		try {
 			creatingCollection = true
@@ -113,6 +128,10 @@
 
 <div class="container">
 	<h1>NFT Collection</h1>
+
+	<button style="margin-bottom: 24px" class="submit" onclick={() => deployContract()}>
+		Deploy Contract
+	</button>
 
 	<div class="create-form">
 		<h2>Create New Collection</h2>
