@@ -2,9 +2,9 @@ import { dev } from '$app/environment'
 import { PUBLIC_HASHCONNECT_PROJECT_ID } from '$env/static/public'
 import type { ExecuteTransaction } from '$lib/hedera/Execute'
 import { AccountId, LedgerId } from '@hashgraph/sdk'
+import { HashConnect, type SessionData } from 'hashconnect'
 import type { HashConnectSigner } from 'hashconnect/dist/signer'
 import { untrack } from 'svelte'
-import { HashConnect, type SessionData } from 'virtual:hashconnect'
 import { dappMetadata } from './dappMetadata'
 
 /**
