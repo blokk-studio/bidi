@@ -7,20 +7,19 @@ settings:
 importers:
 
   contracts:
-    dependencies:
+    devDependencies:
       '@hashgraph/sdk':
         specifier: 2.41.0
         version: 2.41.0
-      dotenv:
-        specifier: ^16.4.7
-        version: 16.4.7
-    devDependencies:
       '@nomicfoundation/hardhat-toolbox':
         specifier: ^4.0.0
         version: 4.0.0(6h62wwpmr663dlgejameei5yuq)
       '@types/node':
         specifier: ^20.11.16
         version: 20.17.10
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.4.7
       hardhat:
         specifier: ^2.19.5
         version: 2.22.17(ts-node@10.9.2(@types/node@20.17.10)(typescript@5.7.2))(typescript@5.7.2)
