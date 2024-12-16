@@ -84,8 +84,33 @@ const getSession = (options: {
 		executeTransaction,
 	}
 }
+/** stores a ledger id in the browser's local storage */
+const saveSelectedLedgerId = (ledgerId: LedgerId) => {
+	if (typeof localStorage === 'undefined') {
+		console.warn(
+			`saveSelectedLedgerId was called when localStorage was not defined. the ledger id ${ledgerId.toString()} will not be saved.`,
+		)
+		return
+	}
 
-let selectedLedgerId = $state(LedgerId.TESTNET)
+	localStorage.setItem('selectedLedgerId', selectedLedgerId.toString())
+}
+/** reads the ledger id that was stored with {@link saveSelectedLedgerId} from the browser's local storage */
+const loadSelectedLedgerId = () => {
+	if (typeof localStorage === 'undefined') {
+		return LedgerId.MAINNET
+	}
+
+	const localStorageItem = localStorage.getItem('selectedLedgerId')
+	if (!localStorageItem) {
+		return LedgerId.MAINNET
+	}
+
+	const selectedLedgerId = LedgerId.fromString(localStorageItem)
+
+	return selectedLedgerId
+}
+let selectedLedgerId = $state(loadSelectedLedgerId())
 let hashConnectInstance = $state<HashConnect>()
 let hasHashConnectInstanceInitialized = $state(false)
 let sessionData = $state<SessionData>()
@@ -131,12 +156,17 @@ const startSubscribing = (hashConnectInstance: HashConnect) => {
 $effect.root(() => {
 	// recreate the hashconnect instance whenever the ledger id changes
 	$effect(() => {
-		// access the value to trigger reactivity
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		selectedLedgerId
+		// persist the new ledger id
+		saveSelectedLedgerId(selectedLedgerId)
 
 		// only re-run this when the ledger id changes (infinite loop)
 		untrack(() => {
+			// hashconnect doesn't use the new ledger id for some reason. we need to reload the page if we have an instance already.
+			if (hashConnectInstance) {
+				window.location.reload()
+				return
+			}
+
 			sessionData = undefined
 			hasHashConnectInstanceInitialized = false
 
