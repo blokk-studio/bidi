@@ -6,7 +6,6 @@
 		isPaired,
 		type InitializedReactiveHashConnect,
 		type PairedReactiveHashConnect,
-		type ReactiveHashConnect,
 		type UninitializedReactiveHashConnect,
 	} from './hashConnect.svelte'
 

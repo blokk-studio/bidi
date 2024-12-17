@@ -4,7 +4,7 @@
 	let { data } = $props()
 </script>
 
-<main class="page-container">
+<main>
 	<div class="grain"></div>
 
 	<div class="content-wrapper">
@@ -17,67 +17,13 @@
 				{/each}
 			{/if}
 		</div>
-
-		<div class="sidebar">
-			<div class="relative">
-				<h2>Create a certificate:</h2>
-
-				<div class="form-group">
-					<label for="latitude" class="form-label">Coordinates:</label>
-					<div class="coordinates-group">
-						<input id="latitude" name="latitude" type="text" class="form-input" />
-						<div>/</div>
-						<input type="text" class="form-input" />
-					</div>
-				</div>
-
-				<div class="form-group">
-					<label for="natural-object" class="form-label">Type of natural object:</label>
-					<input id="natural-object" type="text" class="form-input" />
-				</div>
-
-				<div class="form-group">
-					<label for="owner-of-place" class="form-label">Owner of the place:</label>
-					<input id="owner-of-place" name="owner-of-place" type="text" class="form-input" />
-				</div>
-
-				<div class="form-group">
-					<label for="operations-manager" class="form-label">Operations manager:</label>
-					<input id="operations-" name="operations-" type="text" class="form-input" />
-				</div>
-
-				<div class="form-group">
-					<label for="date-of-work" class="form-label">Date of work:</label>
-					<input id="date-of-work" name="date-of-work" type="date" class="form-input" />
-				</div>
-
-				<div class="form-group">
-					<label for="type-of-work" class="form-label">Type of work:</label>
-					<input id="type-of-work" form="type-of-work" type="text" class="form-input" />
-				</div>
-
-				<div class="form-group">
-					<label for="receiver-id" class="form-label">Receiver ID:</label>
-					<input id="type-of-work" name="type-of-work" type="text" class="form-input" />
-				</div>
-
-				<button class="submit-button"> Submit </button>
-			</div>
-		</div>
 	</div>
 </main>
 
 <style>
-	.page-container {
-		position: relative;
-		background: linear-gradient(to bottom right, #f6d8d5, transparent, #f5f5f5);
-		min-height: 100vh;
-	}
-
 	.content-wrapper {
 		display: grid;
 		position: relative;
-		grid-template-columns: 1fr 320px;
 		gap: 64px;
 		z-index: 2;
 		padding: 5rem 3rem 3rem 3rem;
@@ -94,58 +40,6 @@
 		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 		align-items: start;
 		gap: 2rem;
-	}
-
-	.sidebar {
-		position: sticky;
-		top: 64px;
-		width: 100%;
-		max-width: 320px;
-		height: fit-content;
-	}
-
-	.sidebar h2 {
-		margin-bottom: 2rem;
-		font-weight: 900;
-	}
-
-	.form-group {
-		display: grid;
-		gap: 0.25rem;
-		margin-bottom: 1rem;
-	}
-
-	.form-label {
-		font-size: 0.875rem;
-	}
-
-	.form-input {
-		border-radius: 0.5rem;
-		padding: 0.5rem;
-		width: 100%;
-	}
-
-	.coordinates-group {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-	}
-
-	.coordinates-group input {
-		width: 100%;
-	}
-
-	.submit-button {
-		display: block;
-		position: sticky;
-		top: 24px;
-		border-radius: 0.5rem;
-		background-color: #171717;
-		padding: 1rem;
-		width: 100%;
-		color: white;
-		font-weight: bold;
-		font-size: 0.875rem;
 	}
 
 	.grain {
