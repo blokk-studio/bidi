@@ -5256,7 +5256,7 @@ snapshots:
 
   '@types/dns-packet@5.6.5':
     dependencies:
-      '@types/node': 20.17.10
+      '@types/node': 22.10.2
 
   '@types/estree@1.0.6': {}
 
