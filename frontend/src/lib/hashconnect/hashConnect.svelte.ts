@@ -47,6 +47,26 @@ export interface ReactiveHashConnect {
 	readonly connect?: () => void
 }
 
+export type UninitializedReactiveHashConnect = Pick<ReactiveHashConnect, 'selectedLedgerId'>
+
+export type InitializedReactiveHashConnect = Omit<ReactiveHashConnect, 'connect'> &
+	Pick<Required<ReactiveHashConnect>, 'connect'>
+
+export type PairedReactiveHashConnect = Omit<ReactiveHashConnect, 'connect' | 'session'> &
+	Pick<Required<ReactiveHashConnect>, 'connect' | 'session'>
+
+export const isInitialized = (
+	reactiveHashConnect: ReactiveHashConnect,
+): reactiveHashConnect is InitializedReactiveHashConnect => {
+	return !!reactiveHashConnect.connect
+}
+
+export const isPaired = (
+	reactiveHashConnect: ReactiveHashConnect,
+): reactiveHashConnect is PairedReactiveHashConnect => {
+	return !!reactiveHashConnect.connect && !!reactiveHashConnect.session
+}
+
 const getSession = (options: {
 	hashConnectInstance: HashConnect
 	sessionData: SessionData
