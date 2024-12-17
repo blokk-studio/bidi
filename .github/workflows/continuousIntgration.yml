@@ -14,6 +14,9 @@ jobs:
       PUBLIC_DEPLOYMENT_CONTRACT_ID: ${{ vars.PUBLIC_DEPLOYMENT_CONTRACT_ID }}
       PUBLIC_DEPLOYMENT_NFT_TOKEN_ID: ${{ vars.PUBLIC_DEPLOYMENT_NFT_TOKEN_ID }}
       PUBLIC_IPFS_GATEWAY_BASE_URL: ${{ vars.PUBLIC_IPFS_GATEWAY_BASE_URL }}
+      PUBLIC_GATEWAY_URL: ${{ vars.PUBLIC_GATEWAY_URL }}
+      PINATA_GROUP_ID: ${{ secrets,PINATA_GROUP_ID }}
+      PINATA_JWT: ${{ secrets.PINATA_JWT }}
     steps:
       # setup
       - uses: actions/checkout@v4
@@ -40,6 +43,9 @@ jobs:
       PUBLIC_DEPLOYMENT_CONTRACT_ID: ${{ vars.PUBLIC_DEPLOYMENT_CONTRACT_ID }}
       PUBLIC_DEPLOYMENT_NFT_TOKEN_ID: ${{ vars.PUBLIC_DEPLOYMENT_NFT_TOKEN_ID }}
       PUBLIC_IPFS_GATEWAY_BASE_URL: ${{ vars.PUBLIC_IPFS_GATEWAY_BASE_URL }}
+      PUBLIC_GATEWAY_URL: ${{ vars.PUBLIC_GATEWAY_URL }}
+      PINATA_GROUP_ID: ${{ secrets,PINATA_GROUP_ID }}
+      PINATA_JWT: ${{ secrets.PINATA_JWT }}
     steps:
       # setup
       - uses: actions/checkout@v4
