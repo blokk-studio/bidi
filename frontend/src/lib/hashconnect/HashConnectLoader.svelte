@@ -1,27 +1,14 @@
-<script lang="ts" module>
-	type UninitializedReactiveHashConnect = Pick<ReactiveHashConnect, 'selectedLedgerId'>
-
-	type InitializedReactiveHashConnect = Omit<ReactiveHashConnect, 'connect'> &
-		Pick<Required<ReactiveHashConnect>, 'connect'>
-
-	const isInitialized = (
-		reactiveHashConnect: ReactiveHashConnect,
-	): reactiveHashConnect is InitializedReactiveHashConnect => {
-		return !!reactiveHashConnect.connect
-	}
-
-	type PairedReactiveHashConnect = Omit<ReactiveHashConnect, 'connect' | 'session'> &
-		Pick<Required<ReactiveHashConnect>, 'connect' | 'session'>
-	const isPaired = (
-		reactiveHashConnect: ReactiveHashConnect,
-	): reactiveHashConnect is PairedReactiveHashConnect => {
-		return !!reactiveHashConnect.connect && !!reactiveHashConnect.session
-	}
-</script>
-
 <script lang="ts">
 	import type { Snippet } from 'svelte'
-	import { hashConnect, type ReactiveHashConnect } from './hashConnect.svelte'
+	import {
+		hashConnect,
+		isInitialized,
+		isPaired,
+		type InitializedReactiveHashConnect,
+		type PairedReactiveHashConnect,
+		type ReactiveHashConnect,
+		type UninitializedReactiveHashConnect,
+	} from './hashConnect.svelte'
 
 	let {
 		paired,
