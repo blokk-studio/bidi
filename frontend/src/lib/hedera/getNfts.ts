@@ -23,7 +23,7 @@ const getIpfsUrl = (options: { gatewayBaseUrl: string; ipfsUriOrString: IpfsUri 
 export const getNfts: GetNfts = async (options): Promise<Nft[]> => {
 	const fetch_ = options.fetch ?? globalThis.fetch
 	try {
-		const client = MirrorNodeClient.newFromLedgerId(options.ledgerId)
+		const client = MirrorNodeClient.newFromLedgerId(options.ledgerId, { fetch: fetch_ })
 		const nftUtils = getNftUtils(client)
 		const nftsResponse = await nftUtils.NFTs.setTokenId(options.tokenId.toString()).get()
 		const nftPromises = nftsResponse.nfts.map(async (nft): Promise<Nft> => {
