@@ -28,27 +28,39 @@ export const getNfts: GetNfts = async (options): Promise<Nft[]> => {
 		const nftUtils = getNftUtils(client)
 		const nftsResponse = await nftUtils.NFTs.setTokenId(options.tokenId.toString()).get()
 		const nftPromises = nftsResponse.nfts.map(async (nft): Promise<Nft> => {
-			const decodedMetadata = atob(nft.metadata) as IpfsUri
-			const metadataUrl = getIpfsUrl({
-				gatewayBaseUrl: PUBLIC_IPFS_GATEWAY_BASE_URL,
-				ipfsUriOrString: decodedMetadata,
-			})
-			const metadataResponse = await fetch_(metadataUrl, {
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			})
-			const metadata = await metadataResponse.json()
-			const name = metadata.name
-			const imageUrl = getIpfsUrl({
-				gatewayBaseUrl: PUBLIC_IPFS_GATEWAY_BASE_URL,
-				ipfsUriOrString: metadata.image,
-			})
+			const serialNumber = nft.serial_number
+			// attempt to decode metadata
+			try {
+				const decodedMetadata = atob(nft.metadata) as IpfsUri
+				const metadataUrl = getIpfsUrl({
+					gatewayBaseUrl: PUBLIC_IPFS_GATEWAY_BASE_URL,
+					ipfsUriOrString: decodedMetadata,
+				})
+				const metadataResponse = await fetch_(metadataUrl, {
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				})
+				const metadata = await metadataResponse.json()
+				const name = metadata.name
+				const imageUrl = getIpfsUrl({
+					gatewayBaseUrl: PUBLIC_IPFS_GATEWAY_BASE_URL,
+					ipfsUriOrString: metadata.image,
+				})
+
+				return {
+					serialNumber,
+					name,
+					imageUrl,
+				}
+			} catch {
+				// ignore errors
+			}
 
 			return {
-				serialNumber: nft.serial_number,
-				name,
-				imageUrl,
+				serialNumber,
+				name: '',
+				imageUrl: '#',
 			}
 		})
 		const nfts = await Promise.all(nftPromises)
