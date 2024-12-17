@@ -1,11 +1,13 @@
 <script lang="ts">
-	export let data
+	import type { Nft } from '$lib/nft'
+
+	let { serialNumber }: Pick<Nft, 'serialNumber'> = $props()
 </script>
 
 <figure class="nft-card">
 	<img src="/0.png" alt="" />
 	<button class="claim-button">
-		<span class="index-number">#{data?.serialNumber}</span>
+		<span class="index-number">#{serialNumber}</span>
 		<span class="claim-text">Claim</span>
 	</button>
 </figure>
