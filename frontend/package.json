@@ -25,6 +25,8 @@
 		"eslint-plugin-svelte": "^2.46.1",
 		"globals": "^15.13.0",
 		"hashconnect": "^3.0.13",
+		"pinata-web3": "^0.5.3",
+		"prettier": "^3.4.2",
 		"prettier-plugin-css-order": "^2.1.2",
 		"prettier-plugin-organize-imports": "^4.1.0",
 		"prettier-plugin-svelte": "^3.3.2",
