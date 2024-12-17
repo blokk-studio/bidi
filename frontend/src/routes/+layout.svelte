@@ -10,7 +10,9 @@
 	</nav>
 </header>
 
-{@render children()}
+<div class="layoutContent">
+	{@render children()}
+</div>
 
 <style>
 	header {
@@ -20,5 +22,11 @@
 		background: #f8f8f8;
 		padding: 6px 12px;
 		width: 100%;
+	}
+
+	.layoutContent {
+		position: relative;
+		background: linear-gradient(to bottom right, #f6d8d5, transparent, #f5f5f5);
+		min-height: 100vh;
 	}
 </style>

@@ -1,14 +1,14 @@
 // https://docs.hedera.com/hedera/tutorials/token/create-and-transfer-an-nft-using-a-solidity-contract
 
+import { AccountId, Client, ContractId, Hbar, TokenId } from '@hashgraph/sdk'
+import { type NFTContractAbi } from '../../NFTContractAbi'
+import type { ExecuteTransaction } from '../Execute'
 import {
-	AccountId,
-	Client,
-	ContractExecuteTransaction,
-	ContractFunctionParameters,
-	ContractId,
-	Hbar,
-	TokenId,
-} from '@hashgraph/sdk'
+	TypedContractExecuteTransaction,
+	TypedContractFunctionParameters,
+	type Address,
+	type TypedContractId,
+} from '../typedTransactions'
 
 interface MintNFTResult {
 	serialNumber: number
@@ -18,55 +18,47 @@ interface MintNFTResult {
 	transactionUrl: string
 }
 
-export const mintNFT = async (
-	client: Client,
-	contractId: string | ContractId,
-	tokenId: string | TokenId,
-	metadataUrl: string,
-	allowedClaimerWalletId: string | AccountId,
-): Promise<MintNFTResult> => {
+export const mintNftWithExecutor = async (options: {
+	contractId: ContractId
+	tokenId: TokenId
+	metadataUrl: string
+	allowedClaimerAccountId: AccountId
+	executeTransaction: ExecuteTransaction
+}): Promise<MintNFTResult> => {
 	try {
 		console.log('\n----- Minting NFT -----')
 		console.log('Initiating NFT minting...')
 
-		// Convert inputs to correct types if they're strings
-		const contractIdObj =
-			typeof contractId === 'string' ? ContractId.fromString(contractId) : contractId
-		const tokenIdObj = typeof tokenId === 'string' ? TokenId.fromString(tokenId) : tokenId
-		const allowedClaimerId =
-			typeof allowedClaimerWalletId === 'string'
-				? AccountId.fromString(allowedClaimerWalletId)
-				: allowedClaimerWalletId
-
 		// Convert token ID to solidity address format
-		const tokenIdSolidityAddr = tokenIdObj.toSolidityAddress()
-
+		const tokenAddress = options.tokenId.toSolidityAddress() as Address
 		// Convert allowed claimer to solidity address format
-		const allowedClaimerAddress = allowedClaimerId.toSolidityAddress()
+		const allowedClaimerAddress = options.allowedClaimerAccountId.toSolidityAddress() as Address
 
 		// Create and execute the minting transaction
-		const mintToken = new ContractExecuteTransaction()
-			.setContractId(contractIdObj)
-			.setGas(1000000)
-			.setMaxTransactionFee(new Hbar(20)) // Use when HBAR is under 10 cents
-			.setFunction(
-				'mintNftForUser',
-				new ContractFunctionParameters()
-					.addAddress(tokenIdSolidityAddr)
-					.addBytesArray([Buffer.from(metadataUrl)])
-					.addAddress(allowedClaimerAddress),
-			)
+		const mintNftForUserFunctionParameters = TypedContractFunctionParameters<
+			NFTContractAbi,
+			'mintNftForUser'
+		>()
+			.addAddress(tokenAddress)
+			.addBytesArray([Uint8Array.from(options.metadataUrl)])
+			.addAddress(allowedClaimerAddress)
+		const contractId = options.contractId as TypedContractId<NFTContractAbi>
+		const mintNftForUserTransaction = TypedContractExecuteTransaction<NFTContractAbi>({
+			contractId,
+			functionName: 'mintNftForUser',
+			gas: 1000000,
+			functionParameters: mintNftForUserFunctionParameters,
+		}).setMaxTransactionFee(new Hbar(20)) // Use when HBAR is under 10 cents
 
-		const mintTokenTx = await mintToken.execute(client)
-		const mintTokenRx = await mintTokenTx.getRecord(client)
-		const serial = mintTokenRx.contractFunctionResult!.getInt64(0)
+		const transactionReceipt = await options.executeTransaction(mintNftForUserTransaction)
+		const serial = transactionReceipt.serials[0]
 
 		const result: MintNFTResult = {
 			serialNumber: Number(serial),
-			tokenId: tokenIdObj.toString(),
-			metadata: metadataUrl,
-			allowedClaimer: allowedClaimerId.toString(),
-			transactionUrl: `https://hashscan.io/testnet/token/${tokenIdObj.toString()}/${serial}`,
+			tokenId: options.tokenId.toString(),
+			metadata: options.metadataUrl,
+			allowedClaimer: options.allowedClaimerAccountId.toString(),
+			transactionUrl: `https://hashscan.io/testnet/token/${options.tokenId.toString()}/${serial}`,
 		}
 
 		console.log(`NFT Minted successfully!`)
@@ -82,4 +74,36 @@ export const mintNFT = async (
 		console.error('Error minting NFT:', error)
 		throw error
 	}
+}
+
+export const mintNFT = async (
+	client: Client,
+	contractId: string | ContractId,
+	tokenId: string | TokenId,
+	metadataUrl: string,
+	allowedClaimerWalletId: string | AccountId,
+): Promise<MintNFTResult> => {
+	// Convert inputs to correct types if they're strings
+	const contractIdObj =
+		typeof contractId === 'string' ? ContractId.fromString(contractId) : contractId
+	const tokenIdObj = typeof tokenId === 'string' ? TokenId.fromString(tokenId) : tokenId
+	const allowedClaimerId =
+		typeof allowedClaimerWalletId === 'string'
+			? AccountId.fromString(allowedClaimerWalletId)
+			: allowedClaimerWalletId
+
+	const executeTransaction: ExecuteTransaction = async (transaction) => {
+		const mintTokenTx = await transaction.execute(client)
+		const mintTokenReceipt = await mintTokenTx.getReceipt(client)
+
+		return mintTokenReceipt
+	}
+
+	return mintNftWithExecutor({
+		allowedClaimerAccountId: allowedClaimerId,
+		contractId: contractIdObj,
+		executeTransaction,
+		metadataUrl,
+		tokenId: tokenIdObj,
+	})
 }
