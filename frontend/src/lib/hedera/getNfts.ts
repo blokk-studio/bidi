@@ -58,8 +58,8 @@ export const getNfts: GetNfts = async (options): Promise<Nft[]> => {
 
 			return {
 				serialNumber,
-				name: '',
-				imageUrl: '#',
+				name: 'This NFT has unexpected metadata',
+				imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 16 16" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><text x="4" y="14">?</text></svg>')}`,
 			}
 		})
 		const nfts = await Promise.all(nftPromises)
