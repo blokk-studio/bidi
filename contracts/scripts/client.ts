@@ -1,6 +1,6 @@
 // https://docs.hedera.com/hedera/getting-started/environment-set-up
 
-import { Client, Hbar } from '@hashgraph/sdk'
+import { Client, Hbar, PrivateKey } from '@hashgraph/sdk'
 import {config} from "dotenv";
 
 config();
@@ -24,8 +24,25 @@ export const clientSetup = () => {
         client = Client.forMainnet()
     }
 
+    let privateKey: PrivateKey | undefined = undefined;
+    if (process.env.HEDERA_PRIVATE_KEY_TYPE === "ecdsa") {
+        console.info("Private key was declared to be ECDSA");
+        privateKey = PrivateKey.fromStringECDSA(myPrivateKey);
+    } else {
+        if (process.env.HEDERA_PRIVATE_KEY_TYPE === "ed25519") {
+        console.info("Private key was declared to be ED25519");
+        } else {
+        console.warn(
+            "Private key is assumed to be ed25519 because HEDERA_PRIVATE_KEY_TYPE is not set correctly or at all.",
+            { HEDERA_PRIVATE_KEY_TYPE: process.env.HEDERA_PRIVATE_KEY_TYPE }
+        );
+        }
+
+        privateKey = PrivateKey.fromStringED25519(myPrivateKey);
+    }
+
     // Set your account as the client's operator
-    client.setOperator(myAccountId, myPrivateKey)
+    client.setOperator(myAccountId, privateKey);
 
     // Set the default maximum transaction fee (in Hbar)
     client.setDefaultMaxTransactionFee(new Hbar(100))
