@@ -10,18 +10,53 @@ import "./utils/KeyHelper.sol";
 contract NFTContract is ExpiryHelper, KeyHelper, HederaTokenService {
     address public owner;
 
+    // Mapping to track authorized minters
+    mapping(address => bool) public authorizedMinters;
+
     // Mapping to track which wallet can claim which NFT serial number
     mapping(int64 => address) public nftClaimRights;
     // Mapping to track if an NFT has been claimed
     mapping(int64 => bool) public claimed;
 
+    // Events
+    event MinterAdded(address indexed minter);
+    event MinterRemoved(address indexed minter);
+
     constructor() {
         owner = msg.sender;
+        // Make the owner an authorized minter by default
+        authorizedMinters[msg.sender] = true;
     }
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner can call this function");
         _;
+    }
+
+    modifier onlyMinter() {
+        require(authorizedMinters[msg.sender], "Only authorized minters can call this function");
+        _;
+    }
+
+    // Function to add a new minter
+    function addMinter(address minter) external onlyOwner {
+        require(minter != address(0), "Invalid minter address");
+        require(!authorizedMinters[minter], "Address is already a minter");
+        authorizedMinters[minter] = true;
+        emit MinterAdded(minter);
+    }
+
+    // Function to remove a minter
+    function removeMinter(address minter) external onlyOwner {
+        require(minter != owner, "Cannot remove owner as minter");
+        require(authorizedMinters[minter], "Address is not a minter");
+        authorizedMinters[minter] = false;
+        emit MinterRemoved(minter);
+    }
+
+    // Function to check if an address is an authorized minter
+    function isMinter(address account) external view returns (bool) {
+        return authorizedMinters[account];
     }
 
     function createNft(
@@ -57,7 +92,7 @@ contract NFTContract is ExpiryHelper, KeyHelper, HederaTokenService {
         address token,
         bytes[] memory metadata,
         address allowedClaimer
-    ) external onlyOwner returns(int64) {
+    ) external onlyMinter returns(int64) {
         (int response, , int64[] memory serial) = HederaTokenService.mintToken(token, 0, metadata);
 
         if(response != HederaResponseCodes.SUCCESS){
