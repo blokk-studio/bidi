@@ -15,7 +15,6 @@ const getIpfsUrl = (options: { gatewayBaseUrl: string; ipfsUriOrString: IpfsUri 
 	if (options.ipfsUriOrString.startsWith('ipfs://')) {
 		ipfsCid = options.ipfsUriOrString.substring(7)
 	}
-	// remove 'ipfs://'
 	const ipfsUrl = `${options.gatewayBaseUrl}/${ipfsCid}`
 
 	return ipfsUrl
