@@ -13,7 +13,7 @@
 				<p>No NFTs have been minted yet.</p>
 			{:else}
 				{#each data.nfts as nft}
-					<NftTile data={nft} />
+					<NftTile {...nft} />
 				{/each}
 			{/if}
 		</div>
