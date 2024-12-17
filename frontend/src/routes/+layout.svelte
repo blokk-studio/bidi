@@ -14,10 +14,10 @@
 
 <style>
 	header {
+		position: fixed;
+		z-index: 9;
 		background: #f8f8f8;
 		padding: 6px 12px;
-		position: fixed;
 		width: 100%;
-		z-index: 9;
 	}
 </style>
