@@ -12,11 +12,9 @@
 			{#if !data.nfts.length}
 				<p>No NFTs have been minted yet.</p>
 			{:else}
-				<ul class="nfts">
-					{#each data.nfts as nft}
-						<NftTile data={nft} />
-					{/each}
-				</ul>
+				{#each data.nfts as nft}
+					<NftTile data={nft} />
+				{/each}
 			{/if}
 		</div>
 
