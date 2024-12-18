@@ -8,6 +8,7 @@
 	import { getStatefulAsyncFunction } from '$lib/statefulAsyncFuntion.svelte'
 	import type { AccountId } from '@hashgraph/sdk'
 	import CertificateCreationForm from './CertificateCreationForm.svelte'
+	import containerStyles from '$lib/css/container.module.css'
 
 	const uploadMetadata = async (certificate: BidiCertificate) => {
 		console.debug('TODO: upload this', certificate)
@@ -43,7 +44,7 @@
 	)
 </script>
 
-<main>
+<main class={containerStyles.container}>
 	<h2>Create a certificate:</h2>
 
 	<HashConnectLoader>
@@ -96,10 +97,6 @@
 </main>
 
 <style>
-	main {
-		margin-inline: max(1rem, 50% - 20rem);
-	}
-
 	h2 {
 		margin-top: 3rem;
 		margin-bottom: 1rem;

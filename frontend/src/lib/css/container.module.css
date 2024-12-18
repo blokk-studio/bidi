@@ -1,0 +1,3 @@
+.container {
+	margin-inline: max(1rem, 50% - 20rem);
+}
