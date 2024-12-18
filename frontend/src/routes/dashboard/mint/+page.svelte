@@ -45,6 +45,7 @@
 				imageUrl: '/0.png',
 				name: 'TODO:',
 				serialNumber: mintNftResult.serialNumber,
+				certificate: options.certificate,
 			}
 
 			return nft

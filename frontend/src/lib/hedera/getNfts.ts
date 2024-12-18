@@ -51,11 +51,13 @@ export const getNfts: GetNfts = async (options): Promise<Nft[]> => {
 					gatewayBaseUrl: PUBLIC_IPFS_GATEWAY_BASE_URL,
 					ipfsUriOrString: metadata.image,
 				})
+				const certificate = metadata.properties
 
 				return {
 					serialNumber,
 					name,
 					imageUrl,
+					certificate,
 				}
 			} catch {
 				// ignore errors
@@ -65,6 +67,16 @@ export const getNfts: GetNfts = async (options): Promise<Nft[]> => {
 				serialNumber,
 				name: 'This certificate has unexpected metadata',
 				imageUrl: '/0.png',
+				certificate: {
+					dateOfWork: '1970-01-01',
+					effectOnBiodiversity: '',
+					latitude: 0,
+					longitude: 0,
+					locationOwner: '',
+					operationsManager: '',
+					typeOfNaturalObject: '',
+					typeOfWork: '',
+				},
 			}
 		})
 		const nfts = await Promise.all(nftPromises)
