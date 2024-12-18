@@ -16,9 +16,10 @@ Collaboration: Developed in partnership with the BIDI-Organisation, a real-world
 
 This repository contains the complete source code for the BIDI platform, including:
 
-* Smart contracts for token management and NFT creation.
+* Smart contracts written in Solidity for token management, creation and minting.
 * Frontend application for user interaction and NFT redemption.
-* Backend infrastructure for connecting to the Hedera network.
+* HashPack wallet integration for secure transaction signing and account management.
+* Client-side implementation of the Hedera SDK for blockchain interaction.
 
 ## About Us
 
