@@ -48,12 +48,6 @@
 	<h2>Create a certificate:</h2>
 
 	<HashConnectLoader>
-		{#snippet loading()}
-			<p>Waiting for HashPack...</p>
-		{/snippet}
-		{#snippet initialized()}
-			<p>Please connect your wallet using the button at the top of the page.</p>
-		{/snippet}
 		{#snippet paired({ hashConnect })}
 			<div aria-live="polite" aria-busy={statefulCreateCertificateNft.isPending}>
 				{#if !statefulCreateCertificateNft.result}
