@@ -1,6 +1,6 @@
 export interface BidiCertificate {
-	latitude: number
-	longitude: number
+	swissGridE: number
+	swissGridN: number
 	typeOfNaturalObject: string
 	locationOwner: string
 	operationsManager: string

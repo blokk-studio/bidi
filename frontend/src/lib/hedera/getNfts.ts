@@ -70,8 +70,8 @@ export const getNfts: GetNfts = async (options): Promise<Nft[]> => {
 				certificate: {
 					dateOfWork: '1970-01-01',
 					effectOnBiodiversity: '',
-					latitude: 0,
-					longitude: 0,
+					swissGridE: 0,
+					swissGridN: 0,
 					locationOwner: '',
 					operationsManager: '',
 					typeOfNaturalObject: '',

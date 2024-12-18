@@ -4,14 +4,18 @@
 	import Textarea from '$lib/components/Textarea.svelte'
 	import { AccountId } from '@hashgraph/sdk'
 
+	const coordinatePattern = /\d{3}\s?\d{3}/
+
 	let {
 		onsubmit,
 	}: {
 		onsubmit: (options: { certificate: BidiCertificate; recipientAccountId: AccountId }) => void
 	} = $props()
 
-	let latitudeString = $state('')
-	let longitudeString = $state('')
+	let swissGridEString = $state('')
+	const swissGridE = $derived(parseInt(swissGridEString.replace(/\s/g, '')))
+	let swissGridNString = $state('')
+	const swissGridN = $derived(parseInt(swissGridNString.replace(/\s/g, '')))
 	let typeOfNaturalObject = $state('')
 	let locationOwner = $state('')
 	let operationsManager = $state('')
@@ -26,19 +30,17 @@
 		event.preventDefault()
 
 		// TODO: handle errors
-		const latitude = parseFloat(latitudeString)
-		if (isNaN(latitude)) {
+		if (isNaN(swissGridE)) {
 			return
 		}
 
-		const longitude = parseFloat(longitudeString)
-		if (isNaN(longitude)) {
+		if (isNaN(swissGridN)) {
 			return
 		}
 
 		const certificate: BidiCertificate = {
-			latitude,
-			longitude,
+			swissGridE,
+			swissGridN,
 			typeOfNaturalObject,
 			locationOwner,
 			operationsManager,
@@ -60,19 +62,19 @@
 			<legend>Coordinates:</legend>
 
 			<Input
-				label="Latitude"
-				placeholder="46.8"
-				bind:value={latitudeString}
+				label="E"
+				placeholder="600 000"
+				bind:value={swissGridEString}
 				required
-				pattern={/\d+(?:\.\d+)?/}
+				pattern={coordinatePattern}
 			/>
 
 			<Input
-				label="Longitude"
-				placeholder="8.233333"
-				bind:value={longitudeString}
+				label="N"
+				placeholder="200 000"
+				bind:value={swissGridNString}
 				required
-				pattern={/\d+(?:\.\d+)?/}
+				pattern={coordinatePattern}
 			/>
 		</fieldset>
 	</div>
