@@ -14,9 +14,28 @@
 	const uploadMetadata = async (certificate: BidiCertificate) => {
 		console.debug('TODO: upload this', certificate)
 
-		await new Promise((resolve) => setTimeout(resolve, 2000))
-		// TODO: upload to ipfs & return url
-		return 'ipfs://bafyreie3ichmqul4xa7e6xcy34tylbuq2vf3gnjf7c55trg3b6xyjr4bku/metadata.json'
+		try {
+			const formData = new FormData()
+			formData.append('metadata', JSON.stringify(certificate))
+
+			const response = await fetch('/api/pinata/upload', {
+				method: 'POST',
+				body: formData
+			})
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`)
+			}
+
+			const data = await response.json()
+
+			console.log('metadata url:', data?.metadataUrl)
+			return data.metadataUrl
+
+		} catch (error) {
+			console.error('Upload failed:', error)
+			throw error
+		}
 	}
 
 	let nftCreationState = $state<'uploadingMetadata' | 'mintingNft'>()
