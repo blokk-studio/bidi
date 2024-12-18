@@ -2,11 +2,12 @@
 	import type { BidiCertificate } from '$lib/certificate'
 	import Input from '$lib/components/Input.svelte'
 	import Textarea from '$lib/components/Textarea.svelte'
+	import { AccountId } from '@hashgraph/sdk'
 
 	let {
 		onsubmit,
 	}: {
-		onsubmit: (certificate: BidiCertificate) => void
+		onsubmit: (options: { certificate: BidiCertificate; recipientAccountId: AccountId }) => void
 	} = $props()
 
 	let latitudeString = $state('')
@@ -17,6 +18,7 @@
 	let dateOfWork = $state('')
 	let typeOfWork = $state('')
 	let effectOnBiodiversity = $state('')
+	let recipientAccountIdString = $state('')
 </script>
 
 <form
@@ -45,16 +47,33 @@
 			effectOnBiodiversity,
 		}
 
-		onsubmit(certificate)
+		const recipientAccountId = AccountId.fromString(recipientAccountIdString)
+
+		onsubmit({
+			certificate,
+			recipientAccountId,
+		})
 	}}
 >
 	<div class="form-group">
 		<fieldset class="coordinates-group">
 			<legend>Coordinates:</legend>
 
-			<Input label="Latitude" placeholder="46.8" bind:value={latitudeString} required />
+			<Input
+				label="Latitude"
+				placeholder="46.8"
+				bind:value={latitudeString}
+				required
+				pattern={/\d+(?:\.\d+)?/}
+			/>
 
-			<Input label="Longitude" placeholder="8.233333" bind:value={longitudeString} required />
+			<Input
+				label="Longitude"
+				placeholder="8.233333"
+				bind:value={longitudeString}
+				required
+				pattern={/\d+(?:\.\d+)?/}
+			/>
 		</fieldset>
 	</div>
 
@@ -70,7 +89,12 @@
 
 	<Textarea label="Effect on biodiversity" bind:value={effectOnBiodiversity} required />
 
-	<Input label="Recipient ID" value={''} required />
+	<Input
+		label="Recipient ID"
+		bind:value={recipientAccountIdString}
+		required
+		pattern={/\d+\.\d+\.\d+/}
+	/>
 
 	<button type="submit" class="submit-button">Submit</button>
 </form>

@@ -6,6 +6,7 @@
 	import HashConnectLoader from '$lib/hashconnect/HashConnectLoader.svelte'
 	import { mintNftWithExecutor } from '$lib/hedera/collection/mint'
 	import { getStatefulAsyncFunction } from '$lib/statefulAsyncFuntion.svelte'
+	import type { AccountId } from '@hashgraph/sdk'
 	import CertificateCreationForm from './CertificateCreationForm.svelte'
 
 	const uploadMetadata = async (certificate: BidiCertificate) => {
@@ -18,13 +19,17 @@
 
 	let nftCreationState = $state<'uploadingMetadata' | 'mintingNft'>()
 	const statefulCreateCertificateNft = getStatefulAsyncFunction(
-		async (options: { hashConnect: PairedReactiveHashConnect; certificate: BidiCertificate }) => {
+		async (options: {
+			hashConnect: PairedReactiveHashConnect
+			certificate: BidiCertificate
+			recipientAccountId: AccountId
+		}) => {
 			nftCreationState = 'uploadingMetadata'
 			const metadataUrl = await uploadMetadata(options.certificate)
 
 			nftCreationState = 'mintingNft'
 			const nft = await mintNftWithExecutor({
-				allowedClaimerAccountId: options.hashConnect.session.accountId,
+				allowedClaimerAccountId: options.recipientAccountId,
 				contractId: contractId,
 				tokenId: nftTokenId,
 				executeTransaction: options.hashConnect.session.executeTransaction,
@@ -72,9 +77,10 @@
 					{/if}
 
 					<CertificateCreationForm
-						onsubmit={(certificate) => {
+						onsubmit={(certificateCreation) => {
 							statefulCreateCertificateNft.call({
-								certificate,
+								certificate: certificateCreation.certificate,
+								recipientAccountId: certificateCreation.recipientAccountId,
 								hashConnect,
 							})
 						}}

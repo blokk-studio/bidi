@@ -5,6 +5,7 @@
 		type = 'text',
 		required,
 		placeholder,
+		pattern,
 	}: {
 		label: string
 		value: string
@@ -33,13 +34,14 @@
 			| 'week'
 		required?: boolean
 		placeholder?: string
+		pattern?: RegExp
 	} = $props()
 </script>
 
 <label>
 	<span>{label}</span>
 
-	<input bind:value {required} {type} {placeholder} />
+	<input bind:value {required} {type} {placeholder} pattern={pattern?.source} />
 </label>
 
 <style>
