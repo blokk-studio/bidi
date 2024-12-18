@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { Nft } from '$lib/nft'
 
-	let { serialNumber }: Pick<Nft, 'serialNumber'> = $props()
+	let { serialNumber, imageUrl }: Pick<Nft, 'serialNumber' | 'imageUrl'> = $props()
 </script>
 
 <figure class="nft-card">
-	<img src="/0.png" alt="" />
+	<img src={imageUrl} alt="Image of certificate #{serialNumber}" />
 	<button class="claim-button">
 		<span class="index-number">#{serialNumber}</span>
 		<span class="claim-text">Claim</span>
