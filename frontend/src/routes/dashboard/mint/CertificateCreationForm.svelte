@@ -27,12 +27,12 @@
 
 		// TODO: handle errors
 		const latitude = parseFloat(latitudeString)
-		if (!latitude || isNaN(latitude)) {
+		if (isNaN(latitude)) {
 			return
 		}
 
 		const longitude = parseFloat(longitudeString)
-		if (!longitude || isNaN(longitude)) {
+		if (isNaN(longitude)) {
 			return
 		}
 
