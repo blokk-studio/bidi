@@ -5,17 +5,13 @@ import { json } from '@sveltejs/kit'
 import type { RequestHandler } from './$types'
 
 export const POST: RequestHandler = async ({ request }) => {
-	if (typeof window !== 'undefined') {
-		throw new Error('This API route should only run on the server.')
-	}
-
 	try {
 		const formData = await request.formData()
 		const metadata = JSON.parse(formData.get('metadata') as string)
 
 		// Upload static image todo generate image later on, adding this pre-uploaded url for now
 		// const imageUpload = await pinata.upload.file(staticFile).group(PINATA_GROUP_ID)
-		const imageIpfsUrl = `ipfs://bafkreigwfw2aj7l2nrtyo7a3ias4ui2zdyfdj3zkhetqmioxmhk3yeyxem`
+		const imageIpfsUrl = `ipfs://bafkreifpz6c7i5bcxklf45qgbz3yo4zmic6imue7ryaa62vg3s7m3sa5qa`
 
 		const fullMetadata = {
 			name: 'demo.jpg',
