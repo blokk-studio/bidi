@@ -9,6 +9,7 @@
 	import type { AccountId } from '@hashgraph/sdk'
 	import CertificateCreationForm from './CertificateCreationForm.svelte'
 	import containerStyles from '$lib/css/container.module.css'
+	import type { Nft } from '$lib/nft'
 
 	const uploadMetadata = async (certificate: BidiCertificate) => {
 		console.debug('TODO: upload this', certificate)
@@ -29,7 +30,7 @@
 			const metadataUrl = await uploadMetadata(options.certificate)
 
 			nftCreationState = 'mintingNft'
-			const nft = await mintNftWithExecutor({
+			const mintNftResult = await mintNftWithExecutor({
 				allowedClaimerAccountId: options.recipientAccountId,
 				contractId: contractId,
 				tokenId: nftTokenId,
@@ -38,6 +39,13 @@
 			})
 
 			nftCreationState = undefined
+
+			const nft: Nft = {
+				// TODO: return the metadata from the upload to use here
+				imageUrl: '/0.png',
+				name: 'TODO:',
+				serialNumber: mintNftResult.serialNumber,
+			}
 
 			return nft
 		},
