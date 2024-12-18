@@ -6,7 +6,8 @@
 
 <header>
 	<nav>
-		<a data-sveltekit-preload-data="tap" href="/dashboard">dashboard</a>
+		<a href="/">Landing Page</a>
+		<a href="/dashboard">Dashboard</a>
 	</nav>
 </header>
 
@@ -22,6 +23,11 @@
 		background: #f8f8f8;
 		padding: 6px 12px;
 		width: 100%;
+	}
+
+	nav {
+		display: grid;
+		grid-template-columns: 1fr auto;
 	}
 
 	.layoutContent {
