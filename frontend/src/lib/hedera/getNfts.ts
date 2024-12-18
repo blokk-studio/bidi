@@ -23,7 +23,6 @@ export const getNfts: GetNfts = async (options) => {
 		const nftsResponse = await nftsRequest.get()
 		const nftPromises = nftsResponse.nfts.map(async (nft): Promise<Nft> => {
 			const serialNumber = nft.serial_number
-			// attempt to decode metadata
 
 			const { name, imageUrl, certificate } = await getNftMetadata({
 				metadataString: nft.metadata,

@@ -21,6 +21,7 @@ export const getNftMetadata = async (options: {
 	imageUrl: string
 	certificate: BidiCertificate
 }> => {
+	// attempt to decode metadata with fallback
 	try {
 		const fetch_ = options.fetch ?? fetch
 		const decodedMetadata = atob(options.metadataString) as IpfsUri
