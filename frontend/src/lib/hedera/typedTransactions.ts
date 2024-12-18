@@ -95,14 +95,20 @@ type TypedContractParameters<
 										bool: boolean,
 									) => TypedContractParameters<FunctionInputs, NextIndex<Index>>
 								} & { [key in `~ ${FunctionInputs[Index]['name']}`]: never }
-							: keyof FunctionInputs extends Index
-								? // unhandled parameter type
-									{
-										[key in `~ unhandled function type ${FunctionInputs[Index]['type']}. extend the TypedContractParameters type to handle it.`]: never
-									}
-								: // we've moved past the last function parameter
-									// at this point all parameters have been set and we can safely return parameters
-									CompleteTypedContractFunctionParameters<FunctionInputs>
+							: FunctionInputs[Index]['type'] extends 'int64'
+								? {
+										addInt64: (
+											value: number,
+										) => TypedContractParameters<FunctionInputs, NextIndex<Index>>
+									} & { [key in `~ ${FunctionInputs[Index]['name']}`]: never }
+								: keyof FunctionInputs extends Index
+									? // unhandled parameter type
+										{
+											[key in `~ unhandled function type ${FunctionInputs[Index]['type']}. extend the TypedContractParameters type to handle it.`]: never
+										}
+									: // we've moved past the last function parameter
+										// at this point all parameters have been set and we can safely return parameters
+										CompleteTypedContractFunctionParameters<FunctionInputs>
 	: // the function has more inputs than we can handle, this must never happen. we need to extend the map.
 		never
 
