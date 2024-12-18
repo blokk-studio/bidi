@@ -63,7 +63,7 @@ export const getNfts: GetNfts = async (options): Promise<Nft[]> => {
 
 			return {
 				serialNumber,
-				name: '',
+				name: 'This certificate has unexpected metadata',
 				imageUrl: '/0.png',
 			}
 		})
