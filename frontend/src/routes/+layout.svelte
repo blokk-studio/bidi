@@ -1,8 +1,13 @@
 <script lang="ts">
+	import { page } from '$app/state'
 	import '../app.css'
 
 	let { children } = $props()
 </script>
+
+<svelte:head>
+	<title>{page.data.metadataTitle}</title>
+</svelte:head>
 
 <header>
 	<nav>
