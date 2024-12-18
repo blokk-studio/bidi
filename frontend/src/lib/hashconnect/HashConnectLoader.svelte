@@ -20,14 +20,16 @@
 	} = $props()
 </script>
 
-{#if !isInitialized(hashConnect)}
-	{#if loading}
-		{@render loading({ hashConnect })}
+<div aria-live="polite" aria-busy={!hashConnect.connect}>
+	{#if !isInitialized(hashConnect)}
+		{#if loading}
+			{@render loading({ hashConnect })}
+		{/if}
+	{:else if !isPaired(hashConnect)}
+		{#if initialized}
+			{@render initialized({ hashConnect })}
+		{/if}
+	{:else if paired}
+		{@render paired({ hashConnect })}
 	{/if}
-{:else if !isPaired(hashConnect)}
-	{#if initialized}
-		{@render initialized({ hashConnect })}
-	{/if}
-{:else if paired}
-	{@render paired({ hashConnect })}
-{/if}
+</div>
