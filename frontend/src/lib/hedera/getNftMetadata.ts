@@ -7,7 +7,8 @@ const getIpfsUrl = (options: { gatewayBaseUrl: string; ipfsUriOrString: IpfsUri 
 	if (options.ipfsUriOrString.startsWith('ipfs://')) {
 		ipfsCid = options.ipfsUriOrString.substring(7)
 	}
-	const ipfsUrl = `${options.gatewayBaseUrl}/${ipfsCid}`
+	// TODO: figure out a way to do this dynamically and configure it via env.
+	const ipfsUrl = `https://${ipfsCid}.ipfs.flk-ipfs.xyz`
 
 	return ipfsUrl
 }
