@@ -13,7 +13,9 @@
 				<p>No NFTs have been minted yet.</p>
 			{:else}
 				{#each data.nfts as nft}
-					<NftTile {...nft} />
+					<a href="/certificates/{nft.serialNumber}" class="certificateLink">
+						<NftTile {...nft} />
+					</a>
 				{/each}
 			{/if}
 		</div>
@@ -40,6 +42,21 @@
 		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 		align-items: start;
 		gap: 2rem;
+	}
+
+	.certificateLink {
+		display: block;
+		transition-duration: 200ms;
+		transition-property: scale;
+		transition-timing-function: ease-out;
+		color: inherit;
+		text-decoration: none;
+
+		@media (hover: hover) {
+			&:hover {
+				scale: 1.03;
+			}
+		}
 	}
 
 	.grain {
