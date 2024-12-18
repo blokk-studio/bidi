@@ -40,7 +40,7 @@ export const mintNftWithExecutor = async (options: {
 			'mintNftForUser'
 		>()
 			.addAddress(tokenAddress)
-			.addBytesArray([Uint8Array.from(options.metadataUrl)])
+			.addBytesArray([Buffer.from(options.metadataUrl)])
 			.addAddress(allowedClaimerAddress)
 		const contractId = options.contractId as TypedContractId<NFTContractAbi>
 		const mintNftForUserTransaction = TypedContractExecuteTransaction<NFTContractAbi>({
