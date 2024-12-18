@@ -20,7 +20,7 @@
 
 			const response = await fetch('/api/pinata/upload', {
 				method: 'POST',
-				body: formData
+				body: formData,
 			})
 
 			if (!response.ok) {
@@ -31,7 +31,6 @@
 
 			console.log('metadata url:', data?.metadataUrl)
 			return data.metadataUrl
-
 		} catch (error) {
 			console.error('Upload failed:', error)
 			throw error
