@@ -1,7 +1,10 @@
 import { dev } from '$app/environment'
 import { PUBLIC_HASHCONNECT_PROJECT_ID } from '$env/static/public'
+import { nftTokenId } from '$lib/deployment'
 import type { ExecuteTransaction } from '$lib/hedera/Execute'
-import { AccountId, LedgerId } from '@hashgraph/sdk'
+import { MirrorNodeClient } from '$lib/hedera/MirrorNodeClient'
+import { AccountId, LedgerId, TokenId } from '@hashgraph/sdk'
+import { tokenUtils as getTokenUtils } from '@tikz/hedera-mirror-node-ts'
 import { HashConnect, type SessionData } from 'hashconnect'
 import type { HashConnectSigner } from 'hashconnect/dist/signer'
 import { untrack } from 'svelte'
@@ -21,6 +24,12 @@ interface ReactiveHashConnectSession {
 	executeTransaction: ExecuteTransaction
 }
 
+/** extra information about the user's account that is fetched from the mirror node api */
+export interface AccountInformation {
+	/** whether the user has associated with the nft token */
+	hasAssociatedWithToken: boolean
+}
+
 /**
  * a custom interface to hashconnect with reactive state that exposes only the things we need
  */
@@ -37,6 +46,12 @@ export interface ReactiveHashConnect {
 	 * is `undefined` if not paired or no account id is available in the hashconnect session
 	 */
 	readonly session?: ReactiveHashConnectSession
+	/**
+	 * information about the account of the current session
+	 *
+	 * is `undefined` there is no session
+	 */
+	readonly accountInformation?: AccountInformation
 	/**
 	 * the function to connect to the wallet
 	 *
@@ -55,6 +70,12 @@ export type InitializedReactiveHashConnect = Omit<ReactiveHashConnect, 'connect'
 export type PairedReactiveHashConnect = Omit<ReactiveHashConnect, 'connect' | 'session'> &
 	Pick<Required<ReactiveHashConnect>, 'connect' | 'session'>
 
+export type ReactiveHashConnectWithAccountInformation = Omit<
+	ReactiveHashConnect,
+	'connect' | 'session' | 'accountInformation'
+> &
+	Pick<Required<ReactiveHashConnect>, 'connect' | 'session' | 'accountInformation'>
+
 export const isInitialized = (
 	reactiveHashConnect: ReactiveHashConnect,
 ): reactiveHashConnect is InitializedReactiveHashConnect => {
@@ -65,6 +86,16 @@ export const isPaired = (
 	reactiveHashConnect: ReactiveHashConnect,
 ): reactiveHashConnect is PairedReactiveHashConnect => {
 	return !!reactiveHashConnect.connect && !!reactiveHashConnect.session
+}
+
+export const isWithAccountInformation = (
+	reactiveHashConnect: ReactiveHashConnect,
+): reactiveHashConnect is ReactiveHashConnectWithAccountInformation => {
+	return (
+		!!reactiveHashConnect.connect &&
+		!!reactiveHashConnect.session &&
+		!!reactiveHashConnect.accountInformation
+	)
 }
 
 const getSession = (options: {
@@ -130,6 +161,30 @@ const loadSelectedLedgerId = () => {
 
 	return selectedLedgerId
 }
+
+export const getAccountInformation = async (options: {
+	ledgerId: LedgerId
+	accountId: AccountId
+	tokenId: TokenId
+}): Promise<AccountInformation> => {
+	// using global fetch because this only runs client-side
+	const client = MirrorNodeClient.newFromLedgerId(options.ledgerId, { fetch })
+	const tokenUtils = getTokenUtils(client)
+	const tokenIdString = options.tokenId.toString()
+	const tokensRequest = tokenUtils.Tokens.setAccountId(options.accountId.toString()).setTokenId(
+		tokenIdString,
+	)
+	const tokensResponse = await tokensRequest.get()
+	const token = tokensResponse.tokens.find((token) => {
+		return token.token_id === tokenIdString
+	})
+	const hasAssociatedWithToken = !!token
+
+	return {
+		hasAssociatedWithToken,
+	}
+}
+
 let selectedLedgerId = $state(loadSelectedLedgerId())
 let hashConnectInstance = $state<HashConnect>()
 let hasHashConnectInstanceInitialized = $state(false)
@@ -154,6 +209,7 @@ const connect = $derived.by(() => {
 
 	return connect
 })
+let accountInformation = $state<AccountInformation>()
 
 const startSubscribing = (hashConnectInstance: HashConnect) => {
 	// set up event subscribers
@@ -220,6 +276,20 @@ $effect.root(() => {
 
 		return destroy
 	})
+
+	$effect(() => {
+		if (!session) {
+			return
+		}
+
+		getAccountInformation({
+			accountId: session.accountId,
+			ledgerId: session.ledgerId,
+			tokenId: nftTokenId,
+		}).then((newAccountInformation) => {
+			accountInformation = newAccountInformation
+		})
+	})
 })
 
 export const hashConnect: ReactiveHashConnect = {
@@ -237,5 +307,8 @@ export const hashConnect: ReactiveHashConnect = {
 	// readonly session
 	get session() {
 		return session
+	},
+	get accountInformation() {
+		return accountInformation
 	},
 }
