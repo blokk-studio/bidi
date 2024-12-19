@@ -1,9 +1,81 @@
+import { type NFTContractAbi } from '$lib/NFTContractAbi'
 import {
 	AccountId,
 	Client,
 	ContractExecuteTransaction,
 	ContractFunctionParameters,
+	ContractId,
+	Status,
+	TokenId,
 } from '@hashgraph/sdk'
+import type { ExecuteTransaction } from '../Execute'
+import {
+	TypedContractExecuteTransaction,
+	TypedContractFunctionParameters,
+	type Address,
+	type TypedContractId,
+} from '../typedTransactions'
+
+export const claimNftWithExecutor = async (options: {
+	contractId: ContractId
+	tokenId: TokenId
+	serialNumber: number
+	executeTransaction: ExecuteTransaction
+}) => {
+	console.log('----- Claiming NFT -----')
+	console.log(`Initiating claim for NFT #${options.serialNumber}`)
+
+	try {
+		// Convert token ID to solidity address format
+		const tokenAddress = options.tokenId.toSolidityAddress() as Address
+
+		// Create the claim transaction
+		const claimNftFunctionParameters = TypedContractFunctionParameters<NFTContractAbi, 'claimNft'>()
+			.addAddress(tokenAddress)
+			.addInt64(options.serialNumber)
+		const claimNftTransaction = TypedContractExecuteTransaction<NFTContractAbi>({
+			contractId: options.contractId as TypedContractId<NFTContractAbi>,
+			functionName: 'claimNft',
+			gas: 1000000,
+			functionParameters: claimNftFunctionParameters,
+		})
+
+		// Execute the claim
+		const receipt = await options.executeTransaction(claimNftTransaction)
+
+		if (receipt.status !== Status.Success) {
+			console.log(`Claim failed with response code: ${receipt.status}`)
+
+			return false
+		}
+
+		console.log(`NFT claimed successfully!`)
+		console.log(`Claim Details:`)
+		console.log(`   - Token ID: ${options.tokenId}`)
+		console.log(`   - Serial Number: ${options.serialNumber}`)
+		console.log(
+			`View NFT: https://hashscan.io/testnet/token/${options.tokenId}/${options.serialNumber}`,
+		)
+
+		return true
+	} catch (error) {
+		if (!(error instanceof Error)) {
+			console.log('Unknown error claiming NFT:', error)
+
+			return false
+		}
+
+		if (error.message.includes('You are not authorized to claim this NFT')) {
+			console.log('Error: You are not authorized to claim this NFT')
+		} else if (error.message.includes('NFT has already been claimed')) {
+			console.log('Error: This NFT has already been claimed')
+		} else {
+			console.log('Error claiming NFT:', error.message)
+		}
+	}
+
+	return false
+}
 
 // example: claimNFT("0.0.1234", "0.0.56789", "1", client)
 export const claimNFT = async (

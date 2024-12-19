@@ -7,16 +7,20 @@
 		type InitializedReactiveHashConnect,
 		type PairedReactiveHashConnect,
 		type UninitializedReactiveHashConnect,
+		type ReactiveHashConnectWithAccountInformation,
+		isWithAccountInformation,
 	} from './hashConnect.svelte'
 
 	let {
-		paired,
-		initialized,
 		loading,
+		initialized,
+		paired,
+		withAccountInformation = paired,
 	}: {
 		loading?: Snippet<[{ hashConnect: UninitializedReactiveHashConnect }]>
 		initialized?: Snippet<[{ hashConnect: InitializedReactiveHashConnect }]>
 		paired?: Snippet<[{ hashConnect: PairedReactiveHashConnect }]>
+		withAccountInformation?: Snippet<[{ hashConnect: ReactiveHashConnectWithAccountInformation }]>
 	} = $props()
 </script>
 
@@ -33,7 +37,11 @@
 		{:else}
 			<p>Please connect your wallet using the button at the top of the page.</p>
 		{/if}
-	{:else if paired}
-		{@render paired({ hashConnect })}
+	{:else if !isWithAccountInformation(hashConnect)}
+		{#if paired}
+			{@render paired({ hashConnect })}
+		{/if}
+	{:else if withAccountInformation}
+		{@render withAccountInformation({ hashConnect })}
 	{/if}
 </div>
