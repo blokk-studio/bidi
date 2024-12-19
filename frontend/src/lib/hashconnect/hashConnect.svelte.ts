@@ -5,9 +5,9 @@ import type { ExecuteTransaction } from '$lib/hedera/Execute'
 import { MirrorNodeClient } from '$lib/hedera/MirrorNodeClient'
 import { AccountId, LedgerId, TokenId } from '@hashgraph/sdk'
 import { tokenUtils as getTokenUtils } from '@tikz/hedera-mirror-node-ts'
-import { HashConnect, type SessionData } from 'hashconnect'
 import type { HashConnectSigner } from 'hashconnect/dist/signer'
 import { untrack } from 'svelte'
+import { HashConnect, type SessionData } from 'virtual:hashconnect'
 import { dappMetadata } from './dappMetadata'
 
 /**
