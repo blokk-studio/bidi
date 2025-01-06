@@ -5,8 +5,8 @@
 	import navigationLinkStyles from '$lib/css/navigationLink.module.css'
 	import CreateCertificate from 'lucide-svelte/icons/file-plus'
 	import User from 'lucide-svelte/icons/user'
-	import Disconnect from 'lucide-svelte/icons/log-out'
 	import Testnet from 'lucide-svelte/icons/test-tube-diagonal'
+	import UserMenu from '$lib/components/UserMenu.svelte'
 
 	let { children } = $props()
 </script>
@@ -37,7 +37,7 @@
 			</div>
 		{/snippet}
 		{#snippet paired({ hashConnect })}
-			<div role="menu" class="userMenu">
+			<div class="userMenu">
 				<div
 					title="Connected to {hashConnect.session.ledgerId.toString()} with {hashConnect.session.accountId.toString()}"
 					class="userDetails"
@@ -53,18 +53,10 @@
 					{/if}
 				</div>
 
-				<button onclick={hashConnect.session.disconnect} title="Disconnect">
-					<Disconnect aria-label="Disconnect" />
-				</button>
-
-				<label>
-					Switch chain
-
-					<select bind:value={hashConnect.selectedLedgerId}>
-						<option value={LedgerId.TESTNET}>{LedgerId.TESTNET}</option>
-						<option value={LedgerId.MAINNET}>{LedgerId.MAINNET}</option>
-					</select>
-				</label>
+				<UserMenu
+					bind:ledgerId={hashConnect.selectedLedgerId}
+					disconnect={hashConnect.session.disconnect}
+				/>
 			</div>
 		{/snippet}
 	</HashConnectLoader>

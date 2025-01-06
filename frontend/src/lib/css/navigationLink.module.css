@@ -1,5 +1,5 @@
 .navigationLink {
-	transition-duration: 100ms;
+	transition-duration: 50ms;
 	transition-property: text-decoration-color;
 	transition-timing-function: ease-out;
 	color: var(--colorOrange0);
