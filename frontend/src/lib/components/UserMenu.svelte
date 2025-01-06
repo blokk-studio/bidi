@@ -117,17 +117,18 @@
 		transition-property: color;
 		transition-timing-function: linear;
 		cursor: pointer;
+		color: var(--colorOrange0);
 
 		@media (hover: hover) {
 			&:hover {
-				color: var(--colorOrange0);
+				color: inherit;
 			}
 		}
 
 		@media (hover: none) {
 			&:active {
 				transition-duration: 20ms;
-				color: var(--colorOrange0);
+				color: inherit;
 			}
 		}
 	}

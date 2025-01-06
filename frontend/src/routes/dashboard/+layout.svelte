@@ -79,7 +79,7 @@
 		display: grid;
 		grid-template-columns: max-content 1fr max-content;
 		column-gap: 0.5rem;
-		color: var(--colorOrange0);
+		color: var(--colorBlue0);
 		font-weight: 600;
 	}
 
