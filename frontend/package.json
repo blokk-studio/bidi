@@ -16,6 +16,7 @@
 	"devDependencies": {
 		"@bidi/contracts": "workspace:*",
 		"@hashgraph/sdk": "2.41.0",
+		"@melt-ui/svelte": "^0.86.2",
 		"@sveltejs/adapter-auto": "^3.3.1",
 		"@sveltejs/kit": "^2.15.1",
 		"@sveltejs/vite-plugin-svelte": "^4.0.4",
