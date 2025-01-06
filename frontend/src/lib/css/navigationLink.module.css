@@ -1,0 +1,24 @@
+.navigationLink {
+	transition-duration: 100ms;
+	transition-property: text-decoration-color;
+	transition-timing-function: ease-out;
+	color: var(--colorOrange0);
+	font-weight: 600;
+	text-decoration-line: underline;
+	text-decoration-color: transparent;
+	text-decoration-thickness: 0.15em;
+	text-underline-offset: 0.25em;
+
+	@media (hover: hover) {
+		&:hover {
+			text-decoration-color: var(--colorOrange0);
+		}
+	}
+
+	@media (hover: none) {
+		&:active {
+			transition-duration: 20ms;
+			text-decoration-color: var(--colorOrange0);
+		}
+	}
+}
