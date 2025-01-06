@@ -34,7 +34,8 @@
 
 	nav {
 		display: grid;
-		grid-template-columns: 1fr auto;
+		grid-template-columns: repeat(2, auto);
+		justify-content: space-between;
 	}
 
 	.layoutContent {
