@@ -4,6 +4,9 @@
 	import containerStyles from '$lib/css/container.module.css'
 	import navigationLinkStyles from '$lib/css/navigationLink.module.css'
 	import CreateCertificate from 'lucide-svelte/icons/file-plus'
+	import User from 'lucide-svelte/icons/user'
+	import Disconnect from 'lucide-svelte/icons/log-out'
+	import Testnet from 'lucide-svelte/icons/test-tube-diagonal'
 
 	let { children } = $props()
 </script>
@@ -34,13 +37,30 @@
 			</div>
 		{/snippet}
 		{#snippet paired({ hashConnect })}
-			<div>
-				Connected to {hashConnect.session.ledgerId.toString()} with {hashConnect.session.accountId.toString()}
+			<div role="menu" class="userMenu">
+				<div
+					title="Connected to {hashConnect.session.ledgerId.toString()} with {hashConnect.session.accountId.toString()}"
+					class="userDetails"
+				>
+					<User aria-hidden="true" />
 
-				<button onclick={hashConnect.session.disconnect}>disconnect</button>
+					{hashConnect.session.accountId.toString()}
+
+					{#if hashConnect.session.ledgerId === LedgerId.TESTNET}
+						<span aria-hidden="true" title="Connected to testnet" class="testnetIndicator">
+							<Testnet />
+						</span>
+					{/if}
+				</div>
+
+				<button onclick={hashConnect.session.disconnect} title="Disconnect">
+					<Disconnect aria-label="Disconnect" />
+				</button>
 
 				<label>
-					switch chain <select bind:value={hashConnect.selectedLedgerId}>
+					Switch chain
+
+					<select bind:value={hashConnect.selectedLedgerId}>
 						<option value={LedgerId.TESTNET}>{LedgerId.TESTNET}</option>
 						<option value={LedgerId.MAINNET}>{LedgerId.MAINNET}</option>
 					</select>
@@ -56,5 +76,22 @@
 	aside {
 		display: grid;
 		grid-template-columns: 1fr auto;
+	}
+
+	.userMenu {
+		display: grid;
+		grid-template-columns: repeat(3, auto);
+	}
+
+	.userDetails {
+		display: grid;
+		grid-template-columns: max-content 1fr max-content;
+		column-gap: 0.5rem;
+		color: var(--colorOrange0);
+		font-weight: 600;
+	}
+
+	.testnetIndicator {
+		color: var(--colorPurple0);
 	}
 </style>
