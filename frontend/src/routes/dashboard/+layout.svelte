@@ -3,13 +3,21 @@
 	import { LedgerId } from '@hashgraph/sdk'
 	import containerStyles from '$lib/css/container.module.css'
 	import navigationLinkStyles from '$lib/css/navigationLink.module.css'
+	import CreateCertificate from 'lucide-svelte/icons/file-plus'
 
 	let { children } = $props()
 </script>
 
 <aside class={containerStyles.container}>
 	<nav>
-		<a href="/dashboard/mint" class={navigationLinkStyles.navigationLink}>Create certificate</a>
+		<a
+			href="/dashboard/mint"
+			class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIcon}"
+		>
+			<CreateCertificate aria-hidden="true" />
+
+			Create certificate
+		</a>
 	</nav>
 
 	<HashConnectLoader>
