@@ -51,12 +51,17 @@
 	}
 
 	span {
+		font-weight: 600;
 		font-size: 0.875rem;
 	}
 
 	input {
+		border-width: 0.125rem;
+		border-style: solid;
+		border-color: currentColor;
 		border-radius: 0.5rem;
-		padding: 0.5rem;
+		padding-inline: 1rem;
+		padding-block: 0.75rem;
 		width: 100%;
 	}
 </style>
