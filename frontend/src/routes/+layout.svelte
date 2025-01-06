@@ -2,6 +2,7 @@
 	import { page } from '$app/state'
 	import '../app.css'
 	import '$lib/css/colors.css'
+	import containerStyles from '$lib/css/container.module.css'
 
 	let { children } = $props()
 </script>
@@ -11,7 +12,7 @@
 </svelte:head>
 
 <header>
-	<nav>
+	<nav class={containerStyles.container}>
 		<a href="/" class="navigationLink">BIDI</a>
 		<a href="/dashboard" class="navigationLink">Dashboard</a>
 	</nav>
