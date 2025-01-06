@@ -28,7 +28,7 @@
 		position: sticky;
 		top: 0;
 		z-index: 9;
-		background: #f8f8f8;
+		background-color: white;
 		width: 100%;
 	}
 
@@ -40,7 +40,6 @@
 
 	.layoutContent {
 		position: relative;
-		background: linear-gradient(to bottom right, #f6d8d5, transparent, #f5f5f5);
 		min-height: 100vh;
 	}
 </style>
