@@ -117,6 +117,7 @@
 		transition-property: color;
 		transition-timing-function: linear;
 		cursor: pointer;
+		padding: 0.75rem;
 		color: var(--colorOrange0);
 
 		@media (hover: hover) {
