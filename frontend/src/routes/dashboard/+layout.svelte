@@ -44,7 +44,9 @@
 				>
 					<User aria-hidden="true" />
 
-					{hashConnect.session.accountId.toString()}
+					<span class="userAccountId">
+						{hashConnect.session.accountId.toString()}
+					</span>
 
 					{#if hashConnect.session.ledgerId === LedgerId.TESTNET}
 						<span aria-hidden="true" title="Connected to testnet" class="testnetIndicator">
@@ -68,22 +70,29 @@
 	aside {
 		display: grid;
 		grid-template-columns: 1fr auto;
+		align-items: center;
 	}
 
 	.userMenu {
 		display: grid;
-		grid-template-columns: repeat(3, auto);
+		grid-auto-flow: column;
+		align-items: center;
 	}
 
 	.userDetails {
 		display: grid;
-		grid-template-columns: max-content 1fr max-content;
-		column-gap: 0.5rem;
+		grid-auto-flow: column;
+		align-items: center;
 		color: var(--colorBlue0);
 		font-weight: 600;
 	}
 
+	.userAccountId {
+		margin-left: 0.25rem;
+	}
+
 	.testnetIndicator {
+		margin-left: 0.75rem;
 		color: var(--colorPurple0);
 	}
 </style>
