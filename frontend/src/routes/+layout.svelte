@@ -29,7 +29,6 @@
 		top: 0;
 		z-index: 9;
 		background: #f8f8f8;
-		padding: 6px 12px;
 		width: 100%;
 	}
 
