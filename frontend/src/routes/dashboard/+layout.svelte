@@ -1,13 +1,15 @@
 <script lang="ts">
 	import HashConnectLoader from '$lib/hashconnect/HashConnectLoader.svelte'
 	import { LedgerId } from '@hashgraph/sdk'
+	import containerStyles from '$lib/css/container.module.css'
+	import navigationLinkStyles from '$lib/css/navigationLink.module.css'
 
 	let { children } = $props()
 </script>
 
-<aside>
+<aside class={containerStyles.container}>
 	<nav>
-		<a href="/dashboard/mint">Create certificate</a>
+		<a href="/dashboard/mint" class={navigationLinkStyles.navigationLink}>Create certificate</a>
 	</nav>
 
 	<HashConnectLoader>
@@ -46,14 +48,5 @@
 	aside {
 		display: grid;
 		grid-template-columns: 1fr auto;
-	}
-
-	nav {
-		margin-inline: max(1rem, 50% - 20rem);
-	}
-
-	a {
-		display: inline-block;
-		padding-inline: 0.25rem;
 	}
 </style>
