@@ -77,6 +77,7 @@
 		display: grid;
 		grid-auto-flow: column;
 		align-items: center;
+		margin-right: -0.75rem;
 	}
 
 	.userDetails {
