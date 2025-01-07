@@ -149,7 +149,7 @@
 		padding-inline: 1.5rem;
 		padding-top: 0.75rem;
 		padding-bottom: 0.25rem;
-		color: var(--colorBlue0);
+		color: var(--colorGreen0);
 		font-weight: 600;
 	}
 
