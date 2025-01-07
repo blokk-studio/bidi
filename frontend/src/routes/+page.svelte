@@ -1,40 +1,29 @@
 <script lang="ts">
 	import NftTile from '$lib/components/NftTile.svelte'
+	import containerStyles from '$lib/css/container.module.css'
 
 	let { data } = $props()
 </script>
 
-<main>
-	<div class="content-wrapper">
-		<div class="cards-grid">
-			{#if !data.nfts.length}
-				<p>No NFTs have been minted yet.</p>
-			{:else}
-				{#each data.nfts as nft}
+<main class={containerStyles.container}>
+	<h1>Missions</h1>
+
+	{#if !data.nfts.length}
+		<p>No NFTs have been minted yet.</p>
+	{:else}
+		<ul class="cards-grid">
+			{#each data.nfts as nft}
+				<li>
 					<a href="/certificates/{nft.serialNumber}" class="certificateLink">
 						<NftTile {...nft} />
 					</a>
-				{/each}
-			{/if}
-		</div>
-	</div>
+				</li>
+			{/each}
+		</ul>
+	{/if}
 </main>
 
 <style>
-	.content-wrapper {
-		display: grid;
-		position: relative;
-		gap: 64px;
-		z-index: 2;
-		padding: 5rem 3rem 3rem 3rem;
-	}
-
-	@media (min-width: 1024px) {
-		.content-wrapper {
-			margin-right: 32px;
-		}
-	}
-
 	.cards-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
