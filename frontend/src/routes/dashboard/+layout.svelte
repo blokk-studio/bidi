@@ -15,7 +15,7 @@
 	<nav>
 		<a
 			href="/dashboard/mint"
-			class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIcon}"
+			class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIconLeft}"
 		>
 			<CreateCertificate aria-hidden="true" />
 
