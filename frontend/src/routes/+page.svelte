@@ -5,8 +5,6 @@
 </script>
 
 <main>
-	<div class="grain"></div>
-
 	<div class="content-wrapper">
 		<div class="cards-grid">
 			{#if !data.nfts.length}
