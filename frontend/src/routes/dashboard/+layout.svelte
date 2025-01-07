@@ -15,11 +15,11 @@
 	<nav>
 		<a
 			href="/dashboard/mint"
-			class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIconLeft}"
+			class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIconRight}"
 		>
-			<CreateCertificate aria-hidden="true" />
-
 			Create certificate
+
+			<CreateCertificate aria-hidden="true" />
 		</a>
 	</nav>
 
