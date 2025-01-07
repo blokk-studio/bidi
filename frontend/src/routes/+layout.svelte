@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state'
-	import '../app.css'
+	import '../reset.css'
 	import '$lib/css/colors.css'
 	import containerStyles from '$lib/css/container.module.css'
 	import navigationLinkStyles from '$lib/css/navigationLink.module.css'
