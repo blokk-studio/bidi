@@ -84,7 +84,7 @@
 		display: grid;
 		grid-auto-flow: column;
 		align-items: center;
-		color: var(--colorBlue0);
+		color: var(--colorGreen0);
 		font-weight: 600;
 	}
 
