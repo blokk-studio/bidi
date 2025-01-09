@@ -7,8 +7,6 @@ const getDecimalDegreesFromSeconds = (totalSeconds: number) => {
 	const seconds = totalSeconds_
 	const decimal = hours + minutes / 60 + seconds / 3600
 
-	console.debug(hours, minutes, seconds)
-
 	return decimal
 }
 
