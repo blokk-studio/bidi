@@ -13,4 +13,5 @@ export interface Nft {
 	imageUrl: string
 	certificate: BidiCertificate
 	claimerAccountId: AccountId
+	isClaimed: boolean
 }
