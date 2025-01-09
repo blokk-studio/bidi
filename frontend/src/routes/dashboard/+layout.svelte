@@ -12,16 +12,22 @@
 </script>
 
 <aside class={containerStyles.container}>
-	<nav>
-		<a
-			href="/dashboard/mint"
-			class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIconRight}"
-		>
-			Create certificate
+	<HashConnectLoader>
+		{#snippet withAccountInformation({ hashConnect })}
+			{#if hashConnect.accountInformation.canMint}
+				<nav>
+					<a
+						href="/dashboard/mint"
+						class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIconRight}"
+					>
+						Create certificate
 
-			<CreateCertificate aria-hidden="true" />
-		</a>
-	</nav>
+						<CreateCertificate aria-hidden="true" />
+					</a>
+				</nav>
+			{/if}
+		{/snippet}
+	</HashConnectLoader>
 
 	<HashConnectLoader>
 		{#snippet initialized({ hashConnect })}
