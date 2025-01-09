@@ -35,7 +35,7 @@ export const getNftClaimerAccountId = async (options: {
 		ledgerId: options.ledgerId,
 		fetch: fetch_,
 	})
-	const claimerAddress = outputs['0']
+	const claimerAddress = outputs[0]
 	const claimerAccountId = AccountId.fromEvmAddress(0, 0, claimerAddress)
 
 	return claimerAccountId
