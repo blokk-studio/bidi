@@ -34,8 +34,8 @@
 		{#snippet initialized({ hashConnect })}
 			<div role="menu" class="connectionMenu">
 				<select bind:value={hashConnect.selectedLedgerId}>
-					<option value={LedgerId.TESTNET}>{LedgerId.TESTNET}</option>
-					<option value={LedgerId.MAINNET}>{LedgerId.MAINNET}</option>
+					<option value={LedgerId.TESTNET} selected>{LedgerId.TESTNET}</option>
+					<option value={LedgerId.MAINNET} disabled>{LedgerId.MAINNET}</option>
 				</select>
 
 				<button
