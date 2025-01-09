@@ -74,40 +74,42 @@
 	<h2>NFT</h2>
 	<HashConnectLoader>
 		{#snippet withAccountInformation({ hashConnect })}
-			{#if hashConnect.accountInformation.hasAssociatedWithToken}
-				<button
-					onclick={() => {
-						claimNftWithExecutor({
-							contractId: contractId,
-							tokenId: nftTokenId,
-							serialNumber: data.nft.serialNumber,
-							executeTransaction: hashConnect.session.executeTransaction,
-						})
-					}}
-					class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIconRight}"
-				>
-					Claim this NFT
+			{#if data.nft.claimerAccountId.toString() === hashConnect.session.accountId.toString()}
+				{#if hashConnect.accountInformation.hasAssociatedWithToken}
+					<button
+						onclick={() => {
+							claimNftWithExecutor({
+								contractId: contractId,
+								tokenId: nftTokenId,
+								serialNumber: data.nft.serialNumber,
+								executeTransaction: hashConnect.session.executeTransaction,
+							})
+						}}
+						class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIconRight}"
+					>
+						Claim this NFT
 
-					<Claim aria-hidden="true" />
-				</button>
-			{:else}
-				<button
-					onclick={async () => {
-						const associateWithTokenResult = await associateWithToken({
-							accountId: hashConnect.session.accountId,
-							tokenId: nftTokenId,
-							executeTransaction: hashConnect.session.executeTransaction,
-						})
+						<Claim aria-hidden="true" />
+					</button>
+				{:else}
+					<button
+						onclick={async () => {
+							const associateWithTokenResult = await associateWithToken({
+								accountId: hashConnect.session.accountId,
+								tokenId: nftTokenId,
+								executeTransaction: hashConnect.session.executeTransaction,
+							})
 
-						hashConnect.accountInformation.hasAssociatedWithToken =
-							associateWithTokenResult.hasAssociatedWithToken
-					}}
-					class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIconRight}"
-				>
-					Associate with BIDI
+							hashConnect.accountInformation.hasAssociatedWithToken =
+								associateWithTokenResult.hasAssociatedWithToken
+						}}
+						class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIconRight}"
+					>
+						Associate with BIDI
 
-					<Associate aria-hidden="true" />
-				</button>
+						<Associate aria-hidden="true" />
+					</button>
+				{/if}
 			{/if}
 		{/snippet}
 	</HashConnectLoader>
