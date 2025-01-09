@@ -74,7 +74,7 @@
 </script>
 
 <main class={containerStyles.container}>
-	<h2>Create a certificate:</h2>
+	<h1>Create a certificate</h1>
 
 	<HashConnectLoader>
 		{#snippet withAccountInformation({ hashConnect })}
@@ -124,8 +124,8 @@
 </main>
 
 <style>
-	h2 {
-		margin-top: 3rem;
+	h1 {
+		margin-top: 2rem;
 		margin-bottom: 1rem;
 	}
 </style>
