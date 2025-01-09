@@ -2,9 +2,7 @@ import type { Nft } from '$lib/nft'
 import { AccountId, LedgerId, TokenId } from '@hashgraph/sdk'
 import { nftUtils as getNftUtils } from '@tikz/hedera-mirror-node-ts'
 import { MirrorNodeClient } from './MirrorNodeClient'
-import { getIsClaimed } from './getIsClaimed'
-import { getNftClaimerAccountId } from './getNftClaimer'
-import { getNftMetadata } from './getNftMetadata'
+import { getNftDetails } from './getNftDetails'
 
 export type GetNfts = (options: {
 	ledgerId: LedgerId
@@ -25,29 +23,18 @@ export const getNfts: GetNfts = async (options) => {
 		const nftsResponse = await nftsRequest.get()
 		const nftPromises = nftsResponse.nfts.map(async (nft): Promise<Nft> => {
 			const serialNumber = nft.serial_number
+			const metadataString = nft.metadata
 
-			const { name, imageUrl, certificate } = await getNftMetadata({
-				metadataString: nft.metadata,
-				fetch,
-			})
-			const claimerAccountId = await getNftClaimerAccountId({
+			const nftDetails = await getNftDetails({
 				serialNumber,
-				ledgerId: options.ledgerId,
-				fetch: fetch_,
-			})
-			const isClaimed = await getIsClaimed({
-				serialNumber,
+				metadataString,
 				ledgerId: options.ledgerId,
 				fetch: fetch_,
 			})
 
 			return {
+				...nftDetails,
 				serialNumber,
-				name,
-				imageUrl,
-				certificate,
-				claimerAccountId,
-				isClaimed,
 			}
 		})
 		const nfts = await Promise.all(nftPromises)
