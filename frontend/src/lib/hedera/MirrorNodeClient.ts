@@ -1,18 +1,6 @@
 import { LedgerId } from '@hashgraph/sdk'
 import type { Client, Params } from '@tikz/hedera-mirror-node-ts'
-
-export const getMirrorNodeUrl = (ledgerId: LedgerId) => {
-	switch (ledgerId) {
-		case LedgerId.MAINNET:
-			return 'https://mainnet.mirrornode.hedera.com/'
-		case LedgerId.PREVIEWNET:
-			return 'https://previewnet.mirrornode.hedera.com/'
-		case LedgerId.TESTNET:
-			return 'https://testnet.mirrornode.hedera.com/'
-	}
-
-	throw new Error(`${ledgerId?.toString?.() ?? ledgerId} is not a valid ledger id!`)
-}
+import { getMirrorNodeUrl } from './mirrorNode/getMirrorNodeUrl'
 
 /**
  * a mirror node client using a provided fetch function instead of the global
