@@ -77,44 +77,48 @@
 	<h2>Create a certificate:</h2>
 
 	<HashConnectLoader>
-		{#snippet paired({ hashConnect })}
-			<div aria-live="polite" aria-busy={statefulCreateCertificateNft.isPending}>
-				{#if !statefulCreateCertificateNft.result}
-					{#if statefulCreateCertificateNft.error}
-						<div role="alert">
-							<details>
-								<summary> Unable to create the NFT </summary>
+		{#snippet withAccountInformation({ hashConnect })}
+			{#if !hashConnect.accountInformation.canMint}
+				<p role="alert">You are not allowed to create certificates.</p>
+			{:else}
+				<div aria-live="polite" aria-busy={statefulCreateCertificateNft.isPending}>
+					{#if !statefulCreateCertificateNft.result}
+						{#if statefulCreateCertificateNft.error}
+							<div role="alert">
+								<details>
+									<summary> Unable to create the NFT </summary>
 
-								{statefulCreateCertificateNft.error.message}
-								{#if statefulCreateCertificateNft.error.stack}
-									<pre>{statefulCreateCertificateNft.error.stack}</pre>
-								{/if}
-							</details>
-						</div>
-					{/if}
-					{#if statefulCreateCertificateNft.isPending}
-						{#if nftCreationState === 'uploadingMetadata'}
-							<p role="status">Uploading metadata</p>
-						{:else if nftCreationState === 'mintingNft'}
-							<p role="status">Minting NFT</p>
+									{statefulCreateCertificateNft.error.message}
+									{#if statefulCreateCertificateNft.error.stack}
+										<pre>{statefulCreateCertificateNft.error.stack}</pre>
+									{/if}
+								</details>
+							</div>
 						{/if}
+						{#if statefulCreateCertificateNft.isPending}
+							{#if nftCreationState === 'uploadingMetadata'}
+								<p role="status">Uploading metadata</p>
+							{:else if nftCreationState === 'mintingNft'}
+								<p role="status">Minting NFT</p>
+							{/if}
+						{/if}
+
+						<CertificateCreationForm
+							onsubmit={(certificateCreation) => {
+								statefulCreateCertificateNft.call({
+									certificate: certificateCreation.certificate,
+									recipientAccountId: certificateCreation.recipientAccountId,
+									hashConnect,
+								})
+							}}
+						/>
+					{:else}
+						<p role="status">Nft Created!</p>
+
+						<NftTile {...statefulCreateCertificateNft.result} />
 					{/if}
-
-					<CertificateCreationForm
-						onsubmit={(certificateCreation) => {
-							statefulCreateCertificateNft.call({
-								certificate: certificateCreation.certificate,
-								recipientAccountId: certificateCreation.recipientAccountId,
-								hashConnect,
-							})
-						}}
-					/>
-				{:else}
-					<p role="status">Nft Created!</p>
-
-					<NftTile {...statefulCreateCertificateNft.result} />
-				{/if}
-			</div>
+				</div>
+			{/if}
 		{/snippet}
 	</HashConnectLoader>
 </main>
