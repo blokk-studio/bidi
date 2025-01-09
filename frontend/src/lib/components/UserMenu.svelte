@@ -90,7 +90,10 @@
 				<div {...$ledgerIdRadioGroup} use:ledgerIdRadioGroup>
 					{#each availableLedgerIdStrings as ledgerIdString}
 						<div
-							{...$ledgerIdRadioItem({ value: ledgerIdString })}
+							{...$ledgerIdRadioItem({
+								value: ledgerIdString,
+								disabled: ledgerIdString === LedgerId.MAINNET.toString(),
+							})}
 							use:ledgerIdRadioItem
 							class="item radioItem"
 						>
