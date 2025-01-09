@@ -9,7 +9,9 @@ type ParameterType<AbiParameter extends { type: string }> = AbiParameter['type']
 		? number
 		: Type extends 'address'
 			? Address
-			: never
+			: Type extends 'bool'
+				? boolean
+				: never
 	: never
 
 type Inputs<Abi extends AbiFunctionFragment> = Abi['inputs'] extends undefined
