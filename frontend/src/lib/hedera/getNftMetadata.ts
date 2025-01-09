@@ -14,6 +14,7 @@ const getIpfsUrl = (options: { gatewayBaseUrl: string; ipfsUriOrString: IpfsUri 
 }
 
 export const getNftMetadata = async (options: {
+	/** the base64 encoded metadata string taken directly from the nft's blockchain properties */
 	metadataString: string
 	fetch?: typeof globalThis.fetch
 }): Promise<{
