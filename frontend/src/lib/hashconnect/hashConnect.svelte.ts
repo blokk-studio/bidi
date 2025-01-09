@@ -1,7 +1,8 @@
 import { dev } from '$app/environment'
 import { PUBLIC_HASHCONNECT_PROJECT_ID } from '$env/static/public'
-import { nftTokenId } from '$lib/deployment'
+import { contractId, nftTokenId } from '$lib/deployment'
 import type { ExecuteTransaction } from '$lib/hedera/Execute'
+import { callContract } from '$lib/hedera/mirrorNode/callContract'
 import { MirrorNodeClient } from '$lib/hedera/MirrorNodeClient'
 import { AccountId, LedgerId, TokenId } from '@hashgraph/sdk'
 import { tokenUtils as getTokenUtils } from '@tikz/hedera-mirror-node-ts'
@@ -28,6 +29,8 @@ interface ReactiveHashConnectSession {
 export interface AccountInformation {
 	/** whether the user has associated with the nft token */
 	hasAssociatedWithToken: boolean
+	/** whether the user is allowed to create nfts */
+	canMint: boolean
 }
 
 /**
@@ -162,6 +165,25 @@ const loadSelectedLedgerId = () => {
 	return selectedLedgerId
 }
 
+const isMinterFunctionAbi = {
+	inputs: [
+		{
+			internalType: 'address',
+			name: 'account',
+			type: 'address',
+		},
+	],
+	name: 'isMinter',
+	outputs: [
+		{
+			internalType: 'bool',
+			name: '',
+			type: 'bool',
+		},
+	],
+	stateMutability: 'view',
+	type: 'function',
+} as const
 export const getAccountInformation = async (options: {
 	ledgerId: LedgerId
 	accountId: AccountId
@@ -174,14 +196,23 @@ export const getAccountInformation = async (options: {
 	const tokensRequest = tokenUtils.Tokens.setAccountId(options.accountId.toString()).setTokenId(
 		tokenIdString,
 	)
-	const tokensResponse = await tokensRequest.get()
-	const token = tokensResponse.tokens.find((token) => {
+	const [tokensResponse, isMinterResult] = await Promise.all([
+		tokensRequest.get(),
+		callContract({
+			functionAbi: isMinterFunctionAbi,
+			contractId,
+			inputs: [options.accountId.toSolidityAddress() as `0x${string}`],
+			ledgerId: options.ledgerId,
+		}),
+	])
+	const hasAssociatedWithToken = tokensResponse.tokens.some((token) => {
 		return token.token_id === tokenIdString
 	})
-	const hasAssociatedWithToken = !!token
+	const canMint = isMinterResult[0]
 
 	return {
 		hasAssociatedWithToken,
+		canMint,
 	}
 }
 
