@@ -23,7 +23,7 @@ export const getNft: GetNft = async (options) => {
 	const serialNumber = nftResponse.serial_number
 	const { name, imageUrl, certificate } = await getNftMetadata({
 		metadataString: nftResponse.metadata,
-		fetch,
+		fetch: fetch_,
 	})
 	const claimerAccountId = await getNftClaimerAccountId({
 		serialNumber,
