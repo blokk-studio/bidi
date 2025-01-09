@@ -5,6 +5,7 @@
 	import navigationLinkStyles from '$lib/css/navigationLink.module.css'
 	import CreateCertificate from 'lucide-svelte/icons/file-plus'
 	import User from 'lucide-svelte/icons/user'
+	import Connect from 'lucide-svelte/icons/plug'
 	import Testnet from 'lucide-svelte/icons/test-tube-diagonal'
 	import UserMenu from '$lib/components/UserMenu.svelte'
 
@@ -31,14 +32,19 @@
 
 	<HashConnectLoader>
 		{#snippet initialized({ hashConnect })}
-			<div>
+			<div role="menu" class="connectionMenu">
 				<select bind:value={hashConnect.selectedLedgerId}>
 					<option value={LedgerId.TESTNET}>{LedgerId.TESTNET}</option>
 					<option value={LedgerId.MAINNET}>{LedgerId.MAINNET}</option>
 				</select>
 
-				<button onclick={hashConnect.connect}>
-					Connect to {hashConnect.selectedLedgerId}
+				<button
+					onclick={hashConnect.connect}
+					class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIconRight}"
+				>
+					Connect
+
+					<Connect aria-hidden="true" />
 				</button>
 			</div>
 		{/snippet}
@@ -77,6 +83,13 @@
 		display: grid;
 		grid-template-columns: 1fr auto;
 		align-items: center;
+	}
+
+	.connectionMenu {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+		gap: 1rem;
 	}
 
 	.userMenu {
