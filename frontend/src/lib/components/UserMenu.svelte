@@ -168,6 +168,11 @@
 		padding-inline: 1.5rem;
 		padding-block: 0.75rem;
 
+		&[data-disabled] {
+			color: inherit !important;
+			text-decoration: line-through;
+		}
+
 		&[data-state='open'] {
 			color: var(--colorOrange0);
 		}
