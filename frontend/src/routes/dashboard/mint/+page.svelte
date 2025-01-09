@@ -64,6 +64,8 @@
 				name: 'TODO:',
 				serialNumber: mintNftResult.serialNumber,
 				certificate: options.certificate,
+				claimerAccountId: options.recipientAccountId,
+				isClaimed: false,
 			}
 
 			return nft
