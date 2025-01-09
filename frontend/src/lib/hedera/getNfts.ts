@@ -2,6 +2,7 @@ import type { Nft } from '$lib/nft'
 import { AccountId, LedgerId, TokenId } from '@hashgraph/sdk'
 import { nftUtils as getNftUtils } from '@tikz/hedera-mirror-node-ts'
 import { MirrorNodeClient } from './MirrorNodeClient'
+import { getNftClaimerAccountId } from './getNftClaimer'
 import { getNftMetadata } from './getNftMetadata'
 
 export type GetNfts = (options: {
@@ -28,12 +29,18 @@ export const getNfts: GetNfts = async (options) => {
 				metadataString: nft.metadata,
 				fetch,
 			})
+			const claimerAccountId = await getNftClaimerAccountId({
+				serialNumber,
+				ledgerId: options.ledgerId,
+				fetch: fetch_,
+			})
 
 			return {
 				serialNumber,
 				name,
 				imageUrl,
 				certificate,
+				claimerAccountId,
 			}
 		})
 		const nfts = await Promise.all(nftPromises)

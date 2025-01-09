@@ -1,3 +1,4 @@
+import type { AccountId } from '@hashgraph/sdk'
 import type { BidiCertificate } from './certificate'
 
 export type IpfsUri = `ipfs://${string}`
@@ -11,4 +12,5 @@ export interface Nft {
 	name: string
 	imageUrl: string
 	certificate: BidiCertificate
+	claimerAccountId: AccountId
 }
