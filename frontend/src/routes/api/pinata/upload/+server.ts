@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		const fullMetadata: StandardNftMetadata<BidiCertificate> = {
 			name: metadata.typeOfNaturalObject,
 			creator: 'BiDi Company',
-			description: 'Biodiversity Certificate Metadata',
+			description: metadata.typeOfWork,
 			type: 'image/jpg',
 			properties: {
 				swissGridE: metadata.swissGridE,
