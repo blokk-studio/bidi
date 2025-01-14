@@ -15,7 +15,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		// const imageUpload = await pinata.upload.file(staticFile).group(PINATA_GROUP_ID)
 		const imageIpfsUrl = `ipfs://bafkreifpz6c7i5bcxklf45qgbz3yo4zmic6imue7ryaa62vg3s7m3sa5qa`
 		const fullMetadata: StandardNftMetadata<BidiCertificate> = {
-			name: 'demo.jpg',
+			name: metadata.typeOfNaturalObject,
 			creator: 'BiDi Company',
 			description: 'Biodiversity Certificate Metadata',
 			type: 'image/jpg',
