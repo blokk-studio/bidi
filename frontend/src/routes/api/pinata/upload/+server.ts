@@ -1,5 +1,7 @@
 // https://docs.pinata.cloud/web3/sdk/getting-started
 
+import type { BidiCertificate } from '$lib/certificate'
+import type { StandardNftMetadata } from '$lib/hedera/StandardNftMetadata'
 import { pinata } from '$lib/pinata/pinata.server'
 import { json } from '@sveltejs/kit'
 import type { RequestHandler } from './$types'
@@ -12,13 +14,11 @@ export const POST: RequestHandler = async ({ request }) => {
 		// Upload static image todo generate image later on, adding this pre-uploaded url for now
 		// const imageUpload = await pinata.upload.file(staticFile).group(PINATA_GROUP_ID)
 		const imageIpfsUrl = `ipfs://bafkreifpz6c7i5bcxklf45qgbz3yo4zmic6imue7ryaa62vg3s7m3sa5qa`
-
-		const fullMetadata = {
+		const fullMetadata: StandardNftMetadata<BidiCertificate> = {
 			name: 'demo.jpg',
 			creator: 'BiDi Company',
 			description: 'Biodiversity Certificate Metadata',
 			type: 'image/jpg',
-			format: 'none',
 			properties: {
 				swissGridE: metadata.swissGridE,
 				swissGridN: metadata.swissGridN,
