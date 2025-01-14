@@ -11,7 +11,7 @@
     "artifacts"
   ],
   "devDependencies": {
-    "@hashgraph/sdk": "2.41.0",
+    "@hashgraph/sdk": "^2.56.0",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@types/node": "^22.10.6",
     "dotenv": "^16.4.7",

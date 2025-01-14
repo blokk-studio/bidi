@@ -119,7 +119,7 @@ const getSession = (options: {
 	}
 
 	const ledgerId = signer.getLedgerId()
-	const accountId = signer.getAccountId()
+	const accountId = signer.getAccountId() as unknown as AccountId
 	const disconnect = options.hashConnectInstance.disconnect.bind(hashConnectInstance)
 	const executeTransaction: ExecuteTransaction = async (transaction) => {
 		// there are irrelevant inconsistencies between the internal properties of the types from different versions of @hashgraph/sdk
