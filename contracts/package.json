@@ -13,10 +13,10 @@
   "devDependencies": {
     "@hashgraph/sdk": "2.41.0",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.10.6",
     "dotenv": "^16.4.7",
-    "hardhat": "^2.22.17",
+    "hardhat": "^2.22.18",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }
