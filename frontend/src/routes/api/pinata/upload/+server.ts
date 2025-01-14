@@ -20,8 +20,8 @@ export const POST: RequestHandler = async ({ request }) => {
 			type: 'image/jpg',
 			format: 'none',
 			properties: {
-				latitude: metadata.latitude,
-				longitude: metadata.longitude,
+				swissGridE: metadata.swissGridE,
+				swissGridN: metadata.swissGridN,
 				typeOfNaturalObject: metadata.typeOfNaturalObject,
 				locationOwner: metadata.locationOwner,
 				operationsManager: metadata.operationsManager,
