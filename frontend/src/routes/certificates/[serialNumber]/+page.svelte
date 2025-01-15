@@ -46,32 +46,34 @@
 	<h2>Effect on biodiversity</h2>
 	<p>{data.nft.certificate.effectOnBiodiversity}</p>
 
-	<h2>Location</h2>
+	{#if data.nft.certificate.swissGridE && data.nft.certificate.swissGridN}
+		<h2>Location</h2>
 
-	<p>
-		Coordinates:
+		<p>
+			Coordinates:
 
-		{getCoordinateString(data.nft.certificate.swissGridE)} / {getCoordinateString(
-			data.nft.certificate.swissGridN,
-		)}
-	</p>
+			{getCoordinateString(data.nft.certificate.swissGridE)} / {getCoordinateString(
+				data.nft.certificate.swissGridN,
+			)}
+		</p>
 
-	<figure>
-		<iframe
-			title="{data.nft.certificate.typeOfWork} on the map"
-			width="100%"
-			height="auto"
-			src="https://www.openstreetmap.org/export/embed.html?{mapSearchParams.toString()}"
-			class="map"
-		></iframe>
-		<small>
-			<a
-				href="https://www.openstreetmap.org/#map=8/{decimalLatitudeLongitude.latitude}/{decimalLatitudeLongitude.longitude}"
-			>
-				View on OpenStreetMap
-			</a>
-		</small>
-	</figure>
+		<figure>
+			<iframe
+				title="{data.nft.certificate.typeOfWork} on the map"
+				width="100%"
+				height="auto"
+				src="https://www.openstreetmap.org/export/embed.html?{mapSearchParams.toString()}"
+				class="map"
+			></iframe>
+			<small>
+				<a
+					href="https://www.openstreetmap.org/#map=8/{decimalLatitudeLongitude.latitude}/{decimalLatitudeLongitude.longitude}"
+				>
+					View on OpenStreetMap
+				</a>
+			</small>
+		</figure>
+	{/if}
 
 	<h2>NFT</h2>
 	{#if !data.nft.isClaimed}
