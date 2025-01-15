@@ -12,15 +12,19 @@ const getDecimalDegreesFromSeconds = (totalSeconds: number) => {
 
 const { pow } = Math
 /**
- * converts swiss grid coordinates to decimal latitude and longitude that can be used with embedded maps
+ * converts swiss grid coordinates in LV03 or LV95 format to decimal latitude and longitude that can be used with embedded maps
  *
  * based on the approximate formula of 3.4 in
  * - https://backend.swisstopo.admin.ch/fileservice/sdweb-docs-prod-swisstopoch-files/files/2023/11/14/ea9cbbd6-9583-4a39-8bdf-15fc6a1c2fad.pdf
  * - via https://www.swisstopo.admin.ch/de/schweizerische-kartenprojektionen
  */
 export const getDecimalLatitudeLongitude = (swissGridCoordinates: { E: number; N: number }) => {
-	const X = swissGridCoordinates.N / 1_000_000 - 0.2
-	const Y = swissGridCoordinates.E / 1_000_000 - 0.6
+	// 1 NNN NNN -> LV95
+	const nNormalizationSubtrahend = swissGridCoordinates.N > 1000000 ? 1.2 : 0.2
+	const X = swissGridCoordinates.N / 1_000_000 - nNormalizationSubtrahend
+	// 2 EEE EEE -> LV95
+	const eNormalizationSubtrahend = swissGridCoordinates.E > 2000000 ? 2.6 : 0.6
+	const Y = swissGridCoordinates.E / 1_000_000 - eNormalizationSubtrahend
 
 	const a1 =
 		4.72973056 + 0.7925714 * X + 0.132812 * pow(X, 2) + 0.0255 * pow(X, 3) + 0.0048 * pow(X, 4)
