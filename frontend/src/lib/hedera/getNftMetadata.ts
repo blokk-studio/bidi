@@ -55,8 +55,10 @@ export const getNftMetadata = async (options: {
 			certificate: {
 				dateOfWork: '1970-01-01',
 				effectOnBiodiversity: '',
-				swissGridE: 0,
-				swissGridN: 0,
+				coordinates: {
+					E: 0,
+					N: 0,
+				},
 				typeOfNaturalObject: '',
 				typeOfWork: '',
 				numberOfHoursOfWork: 0,

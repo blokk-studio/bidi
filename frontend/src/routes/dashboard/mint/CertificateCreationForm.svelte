@@ -46,8 +46,10 @@
 		}
 
 		const certificate: BidiCertificate = {
-			swissGridE,
-			swissGridN,
+			coordinates: {
+				E: swissGridE,
+				N: swissGridN,
+			},
 			typeOfNaturalObject,
 			dateOfWork,
 			typeOfWork,

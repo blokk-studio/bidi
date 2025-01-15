@@ -1,6 +1,8 @@
 export interface BidiCertificate {
-	swissGridE: number
-	swissGridN: number
+	coordinates: {
+		E: number
+		N: number
+	}
 	typeOfNaturalObject: string
 	dateOfWork: string
 	typeOfWork: string

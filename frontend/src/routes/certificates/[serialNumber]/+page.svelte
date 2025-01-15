@@ -12,13 +12,14 @@
 	let { data } = $props()
 
 	const decimalLatitudeLongitude = $derived(
-		getDecimalLatitudeLongitude({
-			E: data.nft.certificate.swissGridE,
-			N: data.nft.certificate.swissGridN,
-		}),
+		data.nft.certificate.coordinates &&
+			getDecimalLatitudeLongitude(data.nft.certificate.coordinates),
 	)
 	const mapSearchParams = $derived.by(() => {
 		const urlSearchParams = new URLSearchParams()
+		if (!decimalLatitudeLongitude) {
+			return urlSearchParams
+		}
 		const bbox = `${
 			decimalLatitudeLongitude.longitude - 0.01
 		},${decimalLatitudeLongitude.latitude - 0.01},${
@@ -44,14 +45,14 @@
 	<h2>Effect on biodiversity</h2>
 	<p>{data.nft.certificate.effectOnBiodiversity}</p>
 
-	{#if data.nft.certificate.swissGridE && data.nft.certificate.swissGridN}
+	{#if data.nft.certificate.coordinates && data.nft.certificate.coordinates.E && data.nft.certificate.coordinates.N}
 		<h2>Location</h2>
 
 		<p>
 			Coordinates:
 
-			{getCoordinateString(data.nft.certificate.swissGridE)} / {getCoordinateString(
-				data.nft.certificate.swissGridN,
+			{getCoordinateString(data.nft.certificate.coordinates?.E)} / {getCoordinateString(
+				data.nft.certificate.coordinates?.N,
 			)}
 		</p>
 
