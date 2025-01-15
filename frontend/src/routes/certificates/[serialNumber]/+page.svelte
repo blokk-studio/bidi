@@ -34,7 +34,7 @@
 </script>
 
 <main class={containerStyles.container}>
-	<h1>{data.nft.certificate.typeOfNaturalObject}</h1>
+	<h1>{data.nft.name}</h1>
 
 	<time datetime={data.nft.certificate.dateOfWork}>
 		{new Date(data.nft.certificate.dateOfWork).toLocaleDateString()}
