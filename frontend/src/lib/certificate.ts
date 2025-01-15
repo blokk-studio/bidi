@@ -5,4 +5,6 @@ export interface BidiCertificate {
 	dateOfWork: string
 	typeOfWork: string
 	effectOnBiodiversity: string
+	numberOfHoursOfWork: number
+	numberOfBidi: number
 }
