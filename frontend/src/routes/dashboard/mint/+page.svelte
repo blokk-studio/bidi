@@ -11,12 +11,14 @@
 	import containerStyles from '$lib/css/container.module.css'
 	import type { Nft } from '$lib/nft'
 
-	const uploadMetadata = async (certificate: BidiCertificate) => {
-		console.debug('TODO: upload this', certificate)
-
+	const uploadMetadata = async (options: {
+		missionTitle: string
+		certificate: BidiCertificate
+	}) => {
 		try {
 			const formData = new FormData()
-			formData.append('metadata', JSON.stringify(certificate))
+			formData.append('metadata', JSON.stringify(options.certificate))
+			formData.append('missionTitle', options.missionTitle)
 
 			const response = await fetch('/api/pinata/upload', {
 				method: 'POST',
@@ -43,9 +45,10 @@
 			hashConnect: PairedReactiveHashConnect
 			certificate: BidiCertificate
 			recipientAccountId: AccountId
+			missionTitle: string
 		}) => {
 			nftCreationState = 'uploadingMetadata'
-			const metadataUrl = await uploadMetadata(options.certificate)
+			const metadataUrl = await uploadMetadata(options)
 
 			nftCreationState = 'mintingNft'
 			const mintNftResult = await mintNftWithExecutor({
@@ -109,6 +112,7 @@
 									certificate: certificateCreation.certificate,
 									recipientAccountId: certificateCreation.recipientAccountId,
 									hashConnect,
+									missionTitle: certificateCreation.missionTitle,
 								})
 							}}
 						/>

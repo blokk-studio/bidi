@@ -9,9 +9,15 @@
 	let {
 		onsubmit,
 	}: {
-		onsubmit: (options: { certificate: BidiCertificate; recipientAccountId: AccountId }) => void
+		onsubmit: (options: {
+			certificate: BidiCertificate
+			recipientAccountId: AccountId
+			missionTitle: string
+		}) => void
 	} = $props()
 
+	// mission
+	let missionTitle = $state('')
 	let swissGridEString = $state('')
 	const swissGridE = $derived(parseInt(swissGridEString.replace(/\s/g, '')))
 	let swissGridNString = $state('')
@@ -20,7 +26,10 @@
 	let dateOfWork = $state('')
 	let typeOfWork = $state('')
 	let effectOnBiodiversity = $state('')
+	// certificate/nft
 	let recipientAccountIdString = $state('')
+	let numberOfHoursOfWork = $state(1)
+	const numberOfBidi = $derived(numberOfHoursOfWork * 15)
 </script>
 
 <form
@@ -43,6 +52,8 @@
 			dateOfWork,
 			typeOfWork,
 			effectOnBiodiversity,
+			numberOfHoursOfWork,
+			numberOfBidi,
 		}
 
 		const recipientAccountId = AccountId.fromString(recipientAccountIdString)
@@ -50,43 +61,69 @@
 		onsubmit({
 			certificate,
 			recipientAccountId,
+			missionTitle,
 		})
 	}}
 >
-	<fieldset class="coordinates-group">
-		<legend>Coordinates:</legend>
+	<fieldset>
+		<legend>Mission</legend>
 
-		<Input
-			label="E"
-			placeholder="600 000"
-			bind:value={swissGridEString}
-			required
-			pattern={coordinatePattern}
-		/>
+		<Input label="Mission title" bind:value={missionTitle} required />
 
-		<Input
-			label="N"
-			placeholder="200 000"
-			bind:value={swissGridNString}
-			required
-			pattern={coordinatePattern}
-		/>
+		<fieldset class="coordinates-group">
+			<legend>Coordinates:</legend>
+
+			<Input
+				label="E"
+				placeholder="600 000"
+				bind:value={swissGridEString}
+				required
+				pattern={coordinatePattern}
+			/>
+
+			<Input
+				label="N"
+				placeholder="200 000"
+				bind:value={swissGridNString}
+				required
+				pattern={coordinatePattern}
+			/>
+		</fieldset>
+
+		<Input label="Type of natural object" bind:value={typeOfNaturalObject} required />
+
+		<Input type="date" label="Date of work" bind:value={dateOfWork} required />
+
+		<Textarea label="Type of work" bind:value={typeOfWork} required />
+
+		<Textarea label="Effect on biodiversity" bind:value={effectOnBiodiversity} required />
 	</fieldset>
 
-	<Input label="Type of natural object" bind:value={typeOfNaturalObject} required />
+	<fieldset>
+		<legend>Certificate</legend>
+		<Input
+			label="Recipient ID"
+			bind:value={recipientAccountIdString}
+			required
+			pattern={/\d+\.\d+\.\d+/}
+		/>
 
-	<Input type="date" label="Date of work" bind:value={dateOfWork} required />
+		<Input
+			type="number"
+			label="Number of hours of work"
+			min={1}
+			step={1}
+			bind:value={
+				() => numberOfHoursOfWork.toString(),
+				(newNumberOfHoursOfWork) => {
+					numberOfHoursOfWork = parseInt(newNumberOfHoursOfWork)
+				}
+			}
+			required
+		/>
 
-	<Textarea label="Type of work" bind:value={typeOfWork} required />
-
-	<Textarea label="Effect on biodiversity" bind:value={effectOnBiodiversity} required />
-
-	<Input
-		label="Recipient ID"
-		bind:value={recipientAccountIdString}
-		required
-		pattern={/\d+\.\d+\.\d+/}
-	/>
+		<Input type="number" label="Number of BIDI" value={numberOfBidi.toString()} required readonly />
+	</fieldset>
 
 	<button type="submit" class="submit-button">Submit</button>
 </form>
