@@ -14,7 +14,7 @@
 		<ul class="missionList">
 			{#each data.nfts as nft}
 				<li>
-					<MissionTeaser {...nft.certificate} serialNumber={nft.serialNumber} />
+					<MissionTeaser {...nft} {...nft.certificate} />
 				</li>
 			{/each}
 		</ul>
