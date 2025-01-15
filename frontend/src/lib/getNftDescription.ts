@@ -28,9 +28,9 @@ export const getNftDescription = (certificate: BidiCertificate) => {
 
 	const typeOfNaturalObject = `Type of natural object: ${certificate.typeOfNaturalObject}`
 
-	const typeOfWork = `Type of work:\n${getIndentedMultilineText(certificate.typeOfNaturalObject)}`
+	const typeOfWork = `Type of work:\n${getIndentedMultilineText(certificate.typeOfWork)}`
 
-	const effectOnBiodiversity = `Effect on biodiversity:\n${getIndentedMultilineText(certificate.typeOfNaturalObject)}`
+	const effectOnBiodiversity = `Effect on biodiversity:\n${getIndentedMultilineText(certificate.effectOnBiodiversity)}`
 
 	const numberOfHoursOfWork = `Number of hours of work: ${certificate.numberOfHoursOfWork}h`
 
