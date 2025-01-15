@@ -59,6 +59,8 @@ export const getNftMetadata = async (options: {
 				swissGridN: 0,
 				typeOfNaturalObject: '',
 				typeOfWork: '',
+				numberOfHoursOfWork: 0,
+				numberOfBidi: 0,
 			},
 		}
 	}
