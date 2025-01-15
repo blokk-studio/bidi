@@ -57,8 +57,6 @@ export const getNftMetadata = async (options: {
 				effectOnBiodiversity: '',
 				swissGridE: 0,
 				swissGridN: 0,
-				locationOwner: '',
-				operationsManager: '',
 				typeOfNaturalObject: '',
 				typeOfWork: '',
 			},
