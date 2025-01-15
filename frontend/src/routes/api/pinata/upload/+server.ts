@@ -1,6 +1,7 @@
 // https://docs.pinata.cloud/web3/sdk/getting-started
 
 import type { BidiCertificate } from '$lib/certificate'
+import { getNftDescription } from '$lib/getNftDescription'
 import type { StandardNftMetadata } from '$lib/hedera/StandardNftMetadata'
 import { pinata } from '$lib/pinata/pinata.server'
 import { json } from '@sveltejs/kit'
@@ -22,10 +23,11 @@ export const POST: RequestHandler = async ({ request }) => {
 			typeOfWork: metadata.typeOfWork,
 			effectOnBiodiversity: metadata.effectOnBiodiversity,
 		}
+		const description = getNftDescription(certificate)
 		const fullMetadata: StandardNftMetadata<BidiCertificate> = {
 			name: metadata.typeOfNaturalObject,
 			creator: 'BIDI-Organization',
-			description: metadata.typeOfWork,
+			description,
 			image: imageIpfsUrl,
 			type: 'image/jpg',
 			properties: certificate,
