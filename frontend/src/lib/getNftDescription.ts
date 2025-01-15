@@ -19,8 +19,8 @@ const getIndentedMultilineText = (text: string) => {
 }
 
 export const getNftDescription = (certificate: BidiCertificate) => {
-	const eString = getCoordinateString(certificate.swissGridE)
-	const nString = getCoordinateString(certificate.swissGridN)
+	const eString = getCoordinateString(certificate.coordinates.E)
+	const nString = getCoordinateString(certificate.coordinates.N)
 	const coordinates = `Coordinates: ${eString} / ${nString}`
 
 	const dateString = dateFormat.format(new Date(certificate.dateOfWork))
