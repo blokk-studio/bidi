@@ -18,6 +18,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			name: metadata.typeOfNaturalObject,
 			creator: 'BIDI-Organization',
 			description: metadata.typeOfWork,
+			image: imageIpfsUrl,
 			type: 'image/jpg',
 			properties: {
 				swissGridE: metadata.swissGridE,
@@ -27,7 +28,6 @@ export const POST: RequestHandler = async ({ request }) => {
 				typeOfWork: metadata.typeOfWork,
 				effectOnBiodiversity: metadata.effectOnBiodiversity,
 			},
-			image: imageIpfsUrl,
 		}
 
 		const metadataUpload = await pinata.upload.json(fullMetadata)
