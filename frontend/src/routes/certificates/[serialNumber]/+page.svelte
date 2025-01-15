@@ -5,7 +5,7 @@
 	import HashConnectLoader from '$lib/hashconnect/HashConnectLoader.svelte'
 	import { associateWithToken } from '$lib/hedera/collection/associate'
 	import { claimNftWithExecutor } from '$lib/hedera/collection/claim.js'
-	import { getDecimalLatitudeLongitude } from '$lib/swissGrid.js'
+	import { getCoordinateString, getDecimalLatitudeLongitude } from '$lib/swissGrid.js'
 	import Claim from 'lucide-svelte/icons/file-down'
 	import Associate from 'lucide-svelte/icons/handshake'
 
@@ -49,9 +49,11 @@
 	<h2>Location</h2>
 
 	<p>
-		Coordinates
+		Coordinates:
 
-		{data.nft.certificate.swissGridE?.toLocaleString()} / {data.nft.certificate.swissGridN?.toLocaleString()}
+		{getCoordinateString(data.nft.certificate.swissGridE)} / {getCoordinateString(
+			data.nft.certificate.swissGridN,
+		)}
 	</p>
 
 	<figure>
