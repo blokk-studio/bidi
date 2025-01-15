@@ -4,6 +4,7 @@
 		value = $bindable(),
 		type = 'text',
 		required,
+		readonly,
 		placeholder,
 		pattern,
 	}: {
@@ -33,15 +34,19 @@
 			| 'url'
 			| 'week'
 		required?: boolean
+		readonly?: boolean
 		placeholder?: string
 		pattern?: RegExp
+		min?: number
+		max?: number
+		step?: number
 	} = $props()
 </script>
 
 <label>
 	<span>{label}</span>
 
-	<input bind:value {required} {type} {placeholder} pattern={pattern?.source} />
+	<input bind:value {required} {readonly} {type} {placeholder} pattern={pattern?.source} />
 </label>
 
 <style>
@@ -63,5 +68,9 @@
 		padding-inline: 1rem;
 		padding-block: 0.75rem;
 		width: 100%;
+
+		&[readonly] {
+			border-color: color-mix(in srgb, currentColor 30%, transparent 100%);
+		}
 	}
 </style>
