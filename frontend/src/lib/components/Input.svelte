@@ -7,6 +7,9 @@
 		readonly,
 		placeholder,
 		pattern,
+		min,
+		max,
+		step,
 	}: {
 		label: string
 		value: string
@@ -46,7 +49,17 @@
 <label>
 	<span>{label}</span>
 
-	<input bind:value {required} {readonly} {type} {placeholder} pattern={pattern?.source} />
+	<input
+		bind:value
+		{required}
+		{readonly}
+		{type}
+		{placeholder}
+		pattern={pattern?.source}
+		{min}
+		{max}
+		{step}
+	/>
 </label>
 
 <style>
