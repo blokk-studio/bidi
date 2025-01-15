@@ -14,20 +14,21 @@ export const POST: RequestHandler = async ({ request }) => {
 		// Upload static image todo generate image later on, adding this pre-uploaded url for now
 		// const imageUpload = await pinata.upload.file(staticFile).group(PINATA_GROUP_ID)
 		const imageIpfsUrl = `ipfs://bafkreifpz6c7i5bcxklf45qgbz3yo4zmic6imue7ryaa62vg3s7m3sa5qa`
+		const certificate: BidiCertificate = {
+			swissGridE: metadata.swissGridE,
+			swissGridN: metadata.swissGridN,
+			typeOfNaturalObject: metadata.typeOfNaturalObject,
+			dateOfWork: metadata.dateOfWork,
+			typeOfWork: metadata.typeOfWork,
+			effectOnBiodiversity: metadata.effectOnBiodiversity,
+		}
 		const fullMetadata: StandardNftMetadata<BidiCertificate> = {
 			name: metadata.typeOfNaturalObject,
 			creator: 'BIDI-Organization',
 			description: metadata.typeOfWork,
 			image: imageIpfsUrl,
 			type: 'image/jpg',
-			properties: {
-				swissGridE: metadata.swissGridE,
-				swissGridN: metadata.swissGridN,
-				typeOfNaturalObject: metadata.typeOfNaturalObject,
-				dateOfWork: metadata.dateOfWork,
-				typeOfWork: metadata.typeOfWork,
-				effectOnBiodiversity: metadata.effectOnBiodiversity,
-			},
+			properties: certificate,
 		}
 
 		const metadataUpload = await pinata.upload.json(fullMetadata)
