@@ -5,16 +5,16 @@
 	import type { Nft } from '$lib/nft'
 
 	let {
-		typeOfNaturalObject,
+		name,
 		dateOfWork,
 		typeOfWork,
 		serialNumber,
-	}: Pick<BidiCertificate, 'typeOfNaturalObject' | 'dateOfWork' | 'typeOfWork'> &
-		Pick<Nft, 'serialNumber'> = $props()
+	}: Pick<BidiCertificate, 'dateOfWork' | 'typeOfWork'> & Pick<Nft, 'name' | 'serialNumber'> =
+		$props()
 </script>
 
 <figure class="missionTeaser">
-	<h2>{typeOfNaturalObject}</h2>
+	<h2>{name}</h2>
 
 	<time datetime={dateOfWork}>{new Date(dateOfWork).toLocaleDateString()}</time>
 
