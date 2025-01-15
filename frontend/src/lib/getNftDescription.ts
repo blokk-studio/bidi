@@ -34,7 +34,7 @@ export const getNftDescription = (certificate: BidiCertificate) => {
 
 	const numberOfHoursOfWork = `Number of hours of work: ${certificate.numberOfHoursOfWork}h`
 
-	const numberOfBidi = `Number of BIDI: ${certificate.numberOfHoursOfWork}`
+	const numberOfBidi = `Number of BIDI: ${certificate.numberOfBidi}`
 
 	const description = [
 		coordinates,
