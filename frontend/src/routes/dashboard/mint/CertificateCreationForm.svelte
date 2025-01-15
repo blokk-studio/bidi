@@ -17,8 +17,6 @@
 	let swissGridNString = $state('')
 	const swissGridN = $derived(parseInt(swissGridNString.replace(/\s/g, '')))
 	let typeOfNaturalObject = $state('')
-	let locationOwner = $state('')
-	let operationsManager = $state('')
 	let dateOfWork = $state('')
 	let typeOfWork = $state('')
 	let effectOnBiodiversity = $state('')
@@ -42,8 +40,6 @@
 			swissGridE,
 			swissGridN,
 			typeOfNaturalObject,
-			locationOwner,
-			operationsManager,
 			dateOfWork,
 			typeOfWork,
 			effectOnBiodiversity,
@@ -80,10 +76,6 @@
 	</div>
 
 	<Input label="Type of natural object" bind:value={typeOfNaturalObject} required />
-
-	<Input label="Owner of the place" bind:value={locationOwner} required />
-
-	<Input label="Operations manager" bind:value={operationsManager} required />
 
 	<Input type="date" label="Date of work" bind:value={dateOfWork} required />
 

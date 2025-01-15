@@ -41,8 +41,6 @@
 	</time>
 	<p>{data.nft.certificate.typeOfWork}</p>
 
-	<p>Operations manager: {data.nft.certificate.operationsManager}</p>
-
 	<h2>Effect on biodiversity</h2>
 	<p>{data.nft.certificate.effectOnBiodiversity}</p>
 

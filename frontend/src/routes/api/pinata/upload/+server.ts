@@ -23,8 +23,6 @@ export const POST: RequestHandler = async ({ request }) => {
 				swissGridE: metadata.swissGridE,
 				swissGridN: metadata.swissGridN,
 				typeOfNaturalObject: metadata.typeOfNaturalObject,
-				locationOwner: metadata.locationOwner,
-				operationsManager: metadata.operationsManager,
 				dateOfWork: metadata.dateOfWork,
 				typeOfWork: metadata.typeOfWork,
 				effectOnBiodiversity: metadata.effectOnBiodiversity,
