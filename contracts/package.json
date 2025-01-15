@@ -1,6 +1,7 @@
 {
   "name": "@bidi/contracts",
   "version": "1.0.0",
+  "license": "GPL-3.0",
   "scripts": {
     "clean": "npx hardhat clean && rm -rf cache artifacts typechain-types",
     "compile": "hardhat compile",
