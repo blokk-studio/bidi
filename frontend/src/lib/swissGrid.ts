@@ -45,3 +45,33 @@ export const getDecimalLatitudeLongitude = (swissGridCoordinates: { E: number; N
 		longitude,
 	}
 }
+
+/**
+ * converts an LV03 or LV95 coordinate number to a string with the digits in groups of 3 separated by spaces
+ *
+ * 2600000 -> "2 600 000"
+ *  200000 ->   "200 000"
+ */
+export const getCoordinateString = (coordinate: number) => {
+	const numberString = coordinate.toString()
+	const numberOfGroups = Math.ceil(numberString.length / 3)
+
+	/** the length of the string if all groups were full */
+	const maximumStringLength = numberOfGroups * 3
+	const maximumNumberString = numberString.padStart(maximumStringLength, ' ')
+
+	const groupStrings = []
+	for (let groupIndex = 0; groupIndex < numberOfGroups; groupIndex++) {
+		const firstIndex = groupIndex * 3
+		const firstDigit = maximumNumberString[firstIndex]
+		const secondDigit = maximumNumberString[firstIndex + 1]
+		const thirdDigit = maximumNumberString[firstIndex + 2]
+
+		// might contain spaces at the start if number is in LV95 format
+		const groupString = `${firstDigit}${secondDigit}${thirdDigit}`.trimStart()
+
+		groupStrings.push(groupString)
+	}
+
+	return groupStrings.join(' ')
+}
