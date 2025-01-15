@@ -14,6 +14,6 @@ export const load = async ({ fetch, params }) => {
 
 	return {
 		nft,
-		metadataTitle: `${nft.certificate.typeOfNaturalObject} - BIDI`,
+		metadataTitle: `${nft.name} - BIDI`,
 	}
 }
