@@ -1,4 +1,5 @@
 <script lang="ts">
+	import MultilineText from '$lib/components/MultilineText.svelte'
 	import containerStyles from '$lib/css/container.module.css'
 	import navigationLinkStyles from '$lib/css/navigationLink.module.css'
 	import { contractId, nftTokenId } from '$lib/deployment.js'
@@ -40,10 +41,10 @@
 	<time datetime={data.nft.certificate.dateOfWork}>
 		{new Date(data.nft.certificate.dateOfWork).toLocaleDateString()}
 	</time>
-	<p>{data.nft.certificate.typeOfWork}</p>
+	<p><MultilineText text={data.nft.certificate.typeOfWork} /></p>
 
 	<h2>Effect on biodiversity</h2>
-	<p>{data.nft.certificate.effectOnBiodiversity}</p>
+	<p><MultilineText text={data.nft.certificate.effectOnBiodiversity} /></p>
 
 	{#if data.nft.certificate.coordinates && data.nft.certificate.coordinates.E && data.nft.certificate.coordinates.N}
 		<h2>Location</h2>
