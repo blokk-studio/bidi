@@ -53,27 +53,25 @@
 		})
 	}}
 >
-	<div class="form-group">
-		<fieldset class="coordinates-group">
-			<legend>Coordinates:</legend>
+	<fieldset class="coordinates-group">
+		<legend>Coordinates:</legend>
 
-			<Input
-				label="E"
-				placeholder="600 000"
-				bind:value={swissGridEString}
-				required
-				pattern={coordinatePattern}
-			/>
+		<Input
+			label="E"
+			placeholder="600 000"
+			bind:value={swissGridEString}
+			required
+			pattern={coordinatePattern}
+		/>
 
-			<Input
-				label="N"
-				placeholder="200 000"
-				bind:value={swissGridNString}
-				required
-				pattern={coordinatePattern}
-			/>
-		</fieldset>
-	</div>
+		<Input
+			label="N"
+			placeholder="200 000"
+			bind:value={swissGridNString}
+			required
+			pattern={coordinatePattern}
+		/>
+	</fieldset>
 
 	<Input label="Type of natural object" bind:value={typeOfNaturalObject} required />
 
