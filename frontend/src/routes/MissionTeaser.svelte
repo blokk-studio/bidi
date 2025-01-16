@@ -1,8 +1,6 @@
 <script lang="ts">
 	import navigationLinkStyles from '$lib/css/navigationLink.module.css'
-	import type { BidiCertificate } from '$lib/certificate'
 	import Details from 'lucide-svelte/icons/arrow-right'
-	import type { Nft } from '$lib/nft'
 	import MultilineText from '$lib/components/MultilineText.svelte'
 
 	let {
