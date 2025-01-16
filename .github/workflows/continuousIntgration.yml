@@ -60,7 +60,7 @@ jobs:
       # script
       - run: pnpm -C frontend build
 
-  test_gitlab_deployment:
+  trigger_gitlab_deployment:
     needs:
       - lint_frontend
       - build_frontend
@@ -73,6 +73,5 @@ jobs:
             --fail \
             -F token="$GITLAB_DEPLOYMENT_TRIGGER_TOKEN" \
             -F "ref=main" \
-            -F "variables[TEST_VARIABLE]=hello from github!" \
             https://gitlab.appswithlove.net/api/v4/projects/3937/trigger/pipeline
     if: github.ref == 'refs/heads/main'
