@@ -61,6 +61,9 @@ jobs:
       - run: pnpm -C frontend build
 
   test_gitlab_deployment:
+    needs:
+      - lint_frontend
+      - build_frontend
     runs-on: ubuntu-latest
     env:
       GITLAB_DEPLOYMENT_TRIGGER_TOKEN: ${{ secrets.GITLAB_DEPLOYMENT_TRIGGER_TOKEN }}
