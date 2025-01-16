@@ -15,6 +15,9 @@ services:
       DB_DATABASE: "directus"
       DB_USER: "directus"
       DB_PASSWORD: "directus"
+      # enable cors
+      CORS_ENABLED: true
+      CORS_ORIGIN: true
     ports:
       - 8055:8055
     depends_on:
