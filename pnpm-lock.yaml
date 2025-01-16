@@ -35,6 +35,9 @@ importers:
       '@bidi/contracts':
         specifier: workspace:*
         version: link:../contracts
+      '@directus/sdk':
+        specifier: ^18.0.3
+        version: 18.0.3
       '@hashgraph/sdk':
         specifier: ^2.56.0
         version: 2.56.0
@@ -129,6 +132,10 @@ packages:
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
+
+  '@directus/sdk@18.0.3':
+    resolution: {integrity: sha512-PnEDRDqr2x/DG3HZ3qxU7nFp2nW6zqJqswjii57NhriXgTz4TBUI8NmSdzQvnyHuTL9J0nedYfQGfW4v8odS1A==}
+    engines: {node: '>=18.0.0'}
 
   '@esbuild/aix-ppc64@0.24.2':
     resolution: {integrity: sha512-thpVCb/rhxE/BnMLQ7GReQLLN8q9qbHmI55F4489/ByVg2aQaQ6kbcLb6FHkocZzQhxc4gx0sCk0tJkKBFzDhA==}
@@ -4385,6 +4392,8 @@ snapshots:
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
+
+  '@directus/sdk@18.0.3': {}
 
   '@esbuild/aix-ppc64@0.24.2':
     optional: true

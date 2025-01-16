@@ -1,0 +1,44 @@
+import { PUBLIC_BACKEND_URL } from '$env/static/public'
+import {
+	createDirectus,
+	readItems,
+	rest,
+	type Query,
+	type QueryFilter,
+	type RestCommand,
+} from '@directus/sdk'
+
+export interface Mission {
+	title: string
+	date: string
+	type_of_work: string
+}
+
+interface Schema {
+	Mission: Mission[]
+}
+
+const requestWithFetch = <Output>(
+	options: RestCommand<Output, Schema>,
+	fetch: typeof globalThis.fetch,
+) => {
+	const client = createDirectus<Schema>(PUBLIC_BACKEND_URL, { globals: { fetch } }).with(rest())
+
+	return client.request(options)
+}
+
+export const getMissions = async (options: {
+	filter?: QueryFilter<Schema, Mission>
+	limit?: number
+	fetch: typeof globalThis.fetch
+}) => {
+	const query: Query<Schema, Mission> = {
+		fields: ['title', 'date', 'type_of_work'],
+		limit: options.limit ?? 10,
+	}
+	if (options.filter) {
+		query.filter = options.filter
+	}
+
+	return requestWithFetch(readItems('Mission', query), options.fetch)
+}

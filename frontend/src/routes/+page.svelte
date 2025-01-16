@@ -8,6 +8,21 @@
 <main class={containerStyles.container}>
 	<h1>Missions</h1>
 
+	{#if data.missions.length}
+		<ul class="missionList">
+			{#each data.missions as mission}
+				<li>
+					<MissionTeaser
+						title={mission.title}
+						dateOfWork={mission.date}
+						typeOfWork={mission.type_of_work}
+						route="#"
+					/>
+				</li>
+			{/each}
+		</ul>
+	{/if}
+
 	{#if !data.nfts.length}
 		<p>No NFTs have been minted yet.</p>
 	{:else}
