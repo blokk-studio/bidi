@@ -1,0 +1,41 @@
+services:
+  directus:
+    image: directus/directus
+    environment:
+      # setup admin user
+      ADMIN_EMAIL: "admin@example.com"
+      ADMIN_PASSWORD: "d1r3ctu5"
+      SECRET: replace-with-secure-random-value
+      # automatically reload extensions for local development
+      EXTENSIONS_AUTO_RELOAD: "true"
+      # db settings
+      DB_CLIENT: "pg"
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus"
+      DB_USER: "directus"
+      DB_PASSWORD: "directus"
+    ports:
+      - 8055:8055
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/uploads:/directus/uploads
+      - ./backend/extensions:/directus/extensions
+      - ./backend/migrations:/directus/migrations
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: directus
+      POSTGRES_USER: directus
+      POSTGRES_PASSWORD: directus
+    volumes:
+      - ./directus-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "--host=localhost", "--username=directus"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s

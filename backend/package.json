@@ -1,0 +1,10 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "docker compose up -d"
+  },
+  "license": "GPL-3.0",
+  "private": true
+}
