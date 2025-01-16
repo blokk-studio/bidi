@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "docker compose up -d"
+    "dev": "docker compose up -d",
+    "sh": "docker compose exec directus sh",
+    "schema:snapshot": "docker compose exec directus npx directus schema snapshot -y schema.yml && docker compose cp directus:/directus/schema.yml schema.yml",
+    "schema:apply": "docker compose cp schema.yml directus:/directus/schema.yml && docker compose exec directus npx directus schema apply schema.yml "
   },
   "license": "GPL-3.0",
   "private": true
