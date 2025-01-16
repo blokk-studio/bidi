@@ -14,7 +14,12 @@
 		<ul class="missionList">
 			{#each data.nfts as nft}
 				<li>
-					<MissionTeaser {...nft} {...nft.certificate} />
+					<MissionTeaser
+						title={nft.name}
+						dateOfWork={nft.certificate.dateOfWork}
+						typeOfWork={nft.certificate.dateOfWork}
+						route="/certificates/{nft.serialNumber}"
+					/>
 				</li>
 			{/each}
 		</ul>
