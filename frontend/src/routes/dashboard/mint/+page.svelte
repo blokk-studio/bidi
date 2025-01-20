@@ -10,6 +10,7 @@
 	import CertificateCreationForm from './CertificateCreationForm.svelte'
 	import containerStyles from '$lib/css/container.module.css'
 	import type { Nft } from '$lib/nft'
+	import { generateNftCertificate } from '$lib/certificate-generator/generate-certificate'
 
 	const uploadMetadata = async (options: {
 		missionTitle: string
@@ -19,6 +20,17 @@
 			const formData = new FormData()
 			formData.append('metadata', JSON.stringify(options.certificate))
 			formData.append('missionTitle', options.missionTitle)
+
+			// todo custom qr code url? defaulting to bidigut.ch for now
+			// had to generate this on the frontend cause of canvas stuff
+			const certificateImage = await generateNftCertificate('https://bidigut.ch', {
+				mission: options.missionTitle,
+				dateOfWork: options.certificate.dateOfWork,
+				operationsManager: 'todo',
+				bidiEarned: options.certificate.numberOfBidi.toString(),
+			})
+
+			formData.append('certificateImage', certificateImage)
 
 			const response = await fetch('/api/pinata/upload', {
 				method: 'POST',
