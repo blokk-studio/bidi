@@ -38,7 +38,7 @@ export const getMissions = async (options: {
 	fetch: typeof globalThis.fetch
 }) => {
 	const query: Query<Schema, Mission> = {
-		fields: ['title', 'date', 'type_of_work'],
+		fields: ['*'],
 		limit: options.limit ?? 10,
 	}
 	if (options.filter) {
