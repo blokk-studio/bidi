@@ -40,6 +40,7 @@ export const getMissions = async (options: {
 	const query: Query<Schema, Mission> = {
 		fields: ['*'],
 		limit: options.limit ?? 10,
+		sort: '-date',
 	}
 	if (options.filter) {
 		query.filter = options.filter
