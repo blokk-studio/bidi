@@ -1,0 +1,9 @@
+@font-face {
+	font-style: normal;
+	font-weight: normal;
+	src:
+		url('/static/fonts/andale-mono.woff2') format('woff2'),
+		url('/static/fonts/andale-mono.woff2') format('woff');
+	font-family: 'Andale Mono';
+	font-display: swap;
+}

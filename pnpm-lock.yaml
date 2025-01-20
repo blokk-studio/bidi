@@ -56,6 +56,9 @@ importers:
       '@tikz/hedera-mirror-node-ts':
         specifier: ^3.0.0
         version: 3.0.0(axios@1.7.9)
+      '@types/qrcode':
+        specifier: ^1.5.5
+        version: 1.5.5
       eslint:
         specifier: ^9.18.0
         version: 9.18.0(jiti@2.4.1)
@@ -89,6 +92,9 @@ importers:
       prettier-plugin-svelte:
         specifier: ^3.3.3
         version: 3.3.3(prettier@3.4.2)(svelte@5.17.4)
+      qrcode:
+        specifier: ^1.5.4
+        version: 1.5.4
       svelte:
         specifier: ^5.17.4
         version: 5.17.4
@@ -1160,6 +1166,9 @@ packages:
 
   '@types/prettier@2.7.3':
     resolution: {integrity: sha512-+68kP9yzs4LMp7VNh8gdzMSPZFL44MLGqiHWvttYJe+6qnuVr4Ek9wSBQoveqY/r+LwjCcU29kNVkidwim+kYA==}
+
+  '@types/qrcode@1.5.5':
+    resolution: {integrity: sha512-CdfBi/e3Qk+3Z/fXYShipBT13OJ2fDO2Q2w5CIP5anLTLIndQG9z6P1cnm+8zCWSpm5dnxMFd/uREtb0EXuQzg==}
 
   '@types/qs@6.9.18':
     resolution: {integrity: sha512-kK7dgTYDyGqS+e2Q4aK9X3D7q234CIZ1Bv0q/7Z5IwRDoADNU81xXJK/YVyLbLTZCoIwUoDoffFeF+p/eIklAA==}
@@ -3345,6 +3354,11 @@ packages:
 
   qrcode@1.5.3:
     resolution: {integrity: sha512-puyri6ApkEHYiVl4CFzo1tDkAZ+ATcnbJrJ6RiBM1Fhctdn/ix9MTE3hRph33omisEbC/2fcfemsseiKgBPKZg==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+
+  qrcode@1.5.4:
+    resolution: {integrity: sha512-1ca71Zgiu6ORjHqFBDpnSMTR2ReToX4l1Au1VFLyVeBTFavzQnv5JxMFr3ukHVKpSrSA2MCk0lNJSykjUfz7Zg==}
     engines: {node: '>=10.13.0'}
     hasBin: true
 
@@ -5630,6 +5644,10 @@ snapshots:
       '@types/node': 22.10.6
 
   '@types/prettier@2.7.3': {}
+
+  '@types/qrcode@1.5.5':
+    dependencies:
+      '@types/node': 22.10.6
 
   '@types/qs@6.9.18': {}
 
@@ -8656,6 +8674,12 @@ snapshots:
     dependencies:
       dijkstrajs: 1.0.3
       encode-utf8: 1.0.3
+      pngjs: 5.0.0
+      yargs: 15.4.1
+
+  qrcode@1.5.4:
+    dependencies:
+      dijkstrajs: 1.0.3
       pngjs: 5.0.0
       yargs: 15.4.1
 
