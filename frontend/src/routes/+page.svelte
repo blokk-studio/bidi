@@ -16,7 +16,7 @@
 						title={mission.title}
 						dateOfWork={mission.date}
 						typeOfWork={mission.type_of_work}
-						route="#"
+						route="/missions/{mission.slug}"
 					/>
 				</li>
 			{/each}
