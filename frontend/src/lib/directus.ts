@@ -12,6 +12,11 @@ export interface Mission {
 	title: string
 	date: string
 	type_of_work: string
+	effect_on_biodiversity: string
+	slug: string
+	E: number
+	N: number
+	nft_serial_numbers: string[]
 }
 
 interface Schema {
@@ -41,4 +46,29 @@ export const getMissions = async (options: {
 	}
 
 	return requestWithFetch(readItems('Mission', query), options.fetch)
+}
+
+export const getMission = async (options: {
+	slug: string
+	limit?: number
+	fetch: typeof globalThis.fetch
+}) => {
+	const query: Query<Schema, Mission> = {
+		fields: ['*'],
+		filter: {
+			slug: {
+				_eq: options.slug,
+			},
+		},
+		limit: 1,
+	}
+
+	const missions = await requestWithFetch(readItems('Mission', query), options.fetch)
+	const mission = missions[0]
+
+	if (!mission) {
+		throw new Error(`no mission with slug ${options.slug} exists.`)
+	}
+
+	return mission
 }
