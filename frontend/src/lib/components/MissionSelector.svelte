@@ -5,15 +5,17 @@
 		selectedMission = $bindable(),
 		missions,
 		required,
+		label,
 	}: {
 		selectedMission?: Mission
 		missions: Mission[]
+		label: string
 		required?: boolean
 	} = $props()
 </script>
 
 <fieldset class="missionGrid">
-	<legend>Select a Mission</legend>
+	<legend>{label}</legend>
 
 	{#each missions as mission}
 		<label>
