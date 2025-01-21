@@ -12,6 +12,8 @@
 	import type { Nft } from '$lib/nft'
 	import { generateNftCertificate } from '$lib/certificate-generator/generate-certificate'
 
+	let { data } = $props()
+
 	const uploadMetadata = async (options: {
 		missionTitle: string
 		certificate: BidiCertificate
@@ -119,6 +121,7 @@
 						{/if}
 
 						<CertificateCreationForm
+							missions={data.missions}
 							onsubmit={(certificateCreation) => {
 								statefulCreateCertificateNft.call({
 									certificate: certificateCreation.certificate,
