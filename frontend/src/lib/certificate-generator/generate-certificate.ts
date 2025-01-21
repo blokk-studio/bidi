@@ -1,3 +1,4 @@
+// @ts-expect-error: getting vercel error cause of unsupported (new) version of node.js was used for @types/qrcode
 import QRCode from 'qrcode'
 
 interface TextElement {
@@ -15,7 +16,7 @@ const generateQRCode = async (text: string): Promise<string> => {
 
 	try {
 		const qrSvg = await new Promise<string>((resolve, reject) => {
-			QRCode.toString(text, qrOptions, (err, string) => {
+			QRCode.toString(text, qrOptions, (err: Error, string: string) => {
 				if (err) reject(err)
 				else resolve(string)
 			})
