@@ -189,47 +189,6 @@ const prepareCertificate = async (qrUrl: string, textData: TextElement): Promise
 	}
 }
 
-const convertSvgToPng = async (svgString: string) => {
-	const A4_WIDTH = 2480
-	const A4_HEIGHT = 3508
-
-	const canvas = document.createElement('canvas')
-	canvas.width = A4_WIDTH
-	canvas.height = A4_HEIGHT
-	const ctx = canvas.getContext('2d')
-
-	const img = new Image()
-	const blob = new Blob([svgString], { type: 'image/svg+xml' })
-	const url = URL.createObjectURL(blob)
-
-	return new Promise((resolve, reject) => {
-		if (!ctx) throw new Error('Error getting canvas context')
-
-		img.onload = () => {
-			ctx.fillStyle = 'white'
-			ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-			ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-
-			canvas.toBlob(
-				(blob) => {
-					URL.revokeObjectURL(url)
-					resolve(blob)
-				},
-				'image/png',
-				1.0,
-			)
-		}
-
-		img.onerror = () => {
-			URL.revokeObjectURL(url)
-			reject(new Error('Error loading SVG'))
-		}
-
-		img.src = url
-	})
-}
-
 export const generateNftCertificate = async (
 	qrUrl: string,
 	{
@@ -252,13 +211,11 @@ export const generateNftCertificate = async (
 			bidiEarned: bidiEarned,
 		})
 
-		const pngBlob = (await convertSvgToPng(svgString)) as Blob
+		const svgBlob = new Blob([svgString], { type: 'image/svg+xml' })
+		const filename = `bidi-certificate-${new Date().getTime()}.svg`
 
-		const blobParts: BlobPart[] = [pngBlob]
-		const filename = `bidi-certificate-${new Date().getTime()}.png`
-
-		return new File(blobParts, filename, {
-			type: 'image/png',
+		return new File([svgBlob], filename, {
+			type: 'image/svg+xml',
 			lastModified: new Date().getTime(),
 		})
 	} catch (error) {
