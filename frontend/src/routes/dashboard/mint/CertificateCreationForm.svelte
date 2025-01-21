@@ -85,7 +85,12 @@
 	}}
 >
 	{#if missions}
-		<MissionSelector {missions} bind:selectedMission required />
+		<MissionSelector
+			label="Select a mission for which to create a certificate"
+			{missions}
+			bind:selectedMission
+			required
+		/>
 	{:else}
 		<fieldset>
 			<legend>Mission</legend>
