@@ -1,14 +1,18 @@
 <script lang="ts">
 	import type { BidiCertificate } from '$lib/certificate'
 	import Input from '$lib/components/Input.svelte'
+	import MissionSelector from '$lib/components/MissionSelector.svelte'
 	import Textarea from '$lib/components/Textarea.svelte'
+	import type { Mission } from '$lib/directus'
 	import { AccountId } from '@hashgraph/sdk'
 
 	const coordinatePattern = /\d{3}\s?\d{3}/
 
 	let {
+		missions,
 		onsubmit,
 	}: {
+		missions?: Mission[]
 		onsubmit: (options: {
 			certificate: BidiCertificate
 			recipientAccountId: AccountId
@@ -16,6 +20,7 @@
 		}) => void
 	} = $props()
 
+	let selectedMission = $state<Mission | undefined>(missions?.[0])
 	// mission
 	let missionTitle = $state('')
 	let swissGridEString = $state('')
@@ -30,6 +35,18 @@
 	let recipientAccountIdString = $state('')
 	let numberOfHoursOfWork = $state(1)
 	const numberOfBidi = $derived(numberOfHoursOfWork * 15)
+
+	$effect(() => {
+		if (selectedMission) {
+			missionTitle = selectedMission.title
+			swissGridEString = selectedMission.E.toString()
+			swissGridNString = selectedMission.N.toString()
+			typeOfNaturalObject = selectedMission.type_of_natural_object
+			typeOfWork = selectedMission.type_of_work
+			dateOfWork = selectedMission.date
+			effectOnBiodiversity = selectedMission.effect_on_biodiversity
+		}
+	})
 </script>
 
 <form
@@ -67,39 +84,43 @@
 		})
 	}}
 >
-	<fieldset>
-		<legend>Mission</legend>
+	{#if missions}
+		<MissionSelector {missions} bind:selectedMission required />
+	{:else}
+		<fieldset>
+			<legend>Mission</legend>
 
-		<Input label="Mission title" bind:value={missionTitle} required />
+			<Input label="Mission title" bind:value={missionTitle} required />
 
-		<fieldset class="coordinates-group">
-			<legend>Coordinates:</legend>
+			<fieldset class="coordinates-group">
+				<legend>Coordinates:</legend>
 
-			<Input
-				label="E"
-				placeholder="600 000"
-				bind:value={swissGridEString}
-				required
-				pattern={coordinatePattern}
-			/>
+				<Input
+					label="E"
+					placeholder="600 000"
+					bind:value={swissGridEString}
+					required
+					pattern={coordinatePattern}
+				/>
 
-			<Input
-				label="N"
-				placeholder="200 000"
-				bind:value={swissGridNString}
-				required
-				pattern={coordinatePattern}
-			/>
+				<Input
+					label="N"
+					placeholder="200 000"
+					bind:value={swissGridNString}
+					required
+					pattern={coordinatePattern}
+				/>
+			</fieldset>
+
+			<Input label="Type of natural object" bind:value={typeOfNaturalObject} required />
+
+			<Input type="date" label="Date of work" bind:value={dateOfWork} required />
+
+			<Textarea label="Type of work" bind:value={typeOfWork} required />
+
+			<Textarea label="Effect on biodiversity" bind:value={effectOnBiodiversity} required />
 		</fieldset>
-
-		<Input label="Type of natural object" bind:value={typeOfNaturalObject} required />
-
-		<Input type="date" label="Date of work" bind:value={dateOfWork} required />
-
-		<Textarea label="Type of work" bind:value={typeOfWork} required />
-
-		<Textarea label="Effect on biodiversity" bind:value={effectOnBiodiversity} required />
-	</fieldset>
+	{/if}
 
 	<fieldset>
 		<legend>Certificate</legend>
