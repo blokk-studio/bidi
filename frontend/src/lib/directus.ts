@@ -11,6 +11,7 @@ import {
 export interface Mission {
 	title: string
 	date: string
+	type_of_natural_object: string
 	type_of_work: string
 	effect_on_biodiversity: string
 	slug: string
