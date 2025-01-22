@@ -8,6 +8,9 @@
 	import Connect from 'lucide-svelte/icons/plug'
 	import Testnet from 'lucide-svelte/icons/test-tube-diagonal'
 	import UserMenu from '$lib/components/UserMenu.svelte'
+	import { getNfts } from '$lib/hedera/getNfts'
+	import { nftTokenId } from '$lib/deployment'
+	import Bidi from 'lucide-svelte/icons/coins'
 
 	let { children } = $props()
 </script>
@@ -60,6 +63,23 @@
 						{hashConnect.session.accountId.toString()}
 					</span>
 
+					{#await getNfts( { ledgerId: hashConnect.session.ledgerId, tokenId: nftTokenId, accountId: hashConnect.session.accountId }, ) then nfts}
+						{#if nfts.length}
+							{@const numberOfBidi = nfts.reduce((numberOfBidi, nft) => {
+								if (!nft.certificate.numberOfBidi) {
+									return numberOfBidi
+								}
+
+								return numberOfBidi + nft.certificate.numberOfBidi
+							}, 0)}
+							<span class="numberOfBidi" title="You have {numberOfBidi} BIDI">
+								{numberOfBidi}
+
+								<Bidi aria-label="BIDI" />
+							</span>
+						{/if}
+					{/await}
+
 					{#if hashConnect.session.ledgerId === LedgerId.TESTNET}
 						<span aria-hidden="true" title="Connected to testnet" class="testnetIndicator">
 							<Testnet />
@@ -105,6 +125,13 @@
 		align-items: center;
 		color: var(--colorGreen0);
 		font-weight: 600;
+	}
+
+	.numberOfBidi {
+		display: grid;
+		grid-auto-flow: column;
+		column-gap: 0.25rem;
+		margin-left: 0.75rem;
 	}
 
 	.userAccountId {
