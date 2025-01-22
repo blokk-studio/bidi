@@ -14,7 +14,7 @@
 	<HashConnectLoader>
 		{#snippet paired({ hashConnect })}
 			{#await getNfts( { ledgerId: hashConnect.session.ledgerId, tokenId: nftTokenId, accountId: hashConnect.session.accountId }, )}
-				<p>Loading your certificates...</p>
+				<p role="status">Loading your certificates...</p>
 			{:then nfts}
 				{#if !nfts.length}
 					<p>You don't have any certificates.</p>
