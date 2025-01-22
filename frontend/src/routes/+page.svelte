@@ -8,7 +8,9 @@
 <main class={containerStyles.container}>
 	<h1>Missions</h1>
 
-	{#if data.missions.length}
+	{#if !data.missions.length}
+		<p>No missions have taken place yet.</p>
+	{:else}
 		<ul class="missionList">
 			{#each data.missions as mission}
 				<li>
@@ -17,23 +19,6 @@
 						dateOfWork={mission.date}
 						typeOfWork={mission.type_of_work}
 						route="/missions/{mission.slug}"
-					/>
-				</li>
-			{/each}
-		</ul>
-	{/if}
-
-	{#if !data.nfts.length}
-		<p>No NFTs have been minted yet.</p>
-	{:else}
-		<ul class="missionList">
-			{#each data.nfts as nft}
-				<li>
-					<MissionTeaser
-						title={nft.name}
-						dateOfWork={nft.certificate.dateOfWork}
-						typeOfWork={nft.certificate.dateOfWork}
-						route="/certificates/{nft.serialNumber}"
 					/>
 				</li>
 			{/each}
