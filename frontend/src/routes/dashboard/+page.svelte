@@ -9,7 +9,7 @@
 <main class={containerStyles.container}>
 	<h1>BIDI Dashboard</h1>
 
-	<h2>Your certificates</h2>
+	<h2>Claimed certificates</h2>
 
 	<HashConnectLoader>
 		{#snippet paired({ hashConnect })}
