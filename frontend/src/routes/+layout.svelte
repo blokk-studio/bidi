@@ -2,6 +2,7 @@
 	import { page } from '$app/state'
 	import '../reset.css'
 	import '$lib/css/colors.css'
+	import '$lib/css/fonts.css'
 	import containerStyles from '$lib/css/container.module.css'
 	import navigationLinkStyles from '$lib/css/navigationLink.module.css'
 
