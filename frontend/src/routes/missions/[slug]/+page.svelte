@@ -81,53 +81,17 @@
 			<ul class="nftList">
 				{#each data.nfts as nft}
 					<li>
-						<figure class="nftListItem">
-							<img src={nft.imageUrl} alt="Image of certificate {nft.name}" class="nftTile" />
+						<a href="/certificates/{nft.serialNumber}" class={navigationLinkStyles.navigationLink}>
+							<figure class="nftListItem">
+								<img src={nft.imageUrl} alt="Image of certificate {nft.name}" class="nftTile" />
 
-							{#if !nft.isClaimed}
-								<HashConnectLoader>
-									{#snippet withAccountInformation({ hashConnect })}
-										{#if nft.claimerAccountId.toString() === hashConnect.session.accountId.toString()}
-											{#if hashConnect.accountInformation.hasAssociatedWithToken}
-												<button
-													onclick={() => {
-														claimNftWithExecutor({
-															contractId: contractId,
-															tokenId: nftTokenId,
-															serialNumber: nft.serialNumber,
-															executeTransaction: hashConnect.session.executeTransaction,
-														})
-													}}
-													class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIconRight}"
-												>
-													Claim this NFT
+								<div role="presentation">
+									<span class="nftSerialNumber">#{nft.serialNumber}</span>
 
-													<Claim aria-hidden="true" />
-												</button>
-											{:else}
-												<button
-													onclick={async () => {
-														const associateWithTokenResult = await associateWithToken({
-															accountId: hashConnect.session.accountId,
-															tokenId: nftTokenId,
-															executeTransaction: hashConnect.session.executeTransaction,
-														})
-
-														hashConnect.accountInformation.hasAssociatedWithToken =
-															associateWithTokenResult.hasAssociatedWithToken
-													}}
-													class="{navigationLinkStyles.navigationLink} {navigationLinkStyles.withIconRight}"
-												>
-													Associate with BIDI
-
-													<Associate aria-hidden="true" />
-												</button>
-											{/if}
-										{/if}
-									{/snippet}
-								</HashConnectLoader>
-							{/if}
-						</figure>
+									{nft.name}
+								</div>
+							</figure>
+						</a>
 					</li>
 				{/each}
 			</ul>
@@ -170,5 +134,10 @@
 	.nftListItem {
 		display: grid;
 		gap: 0.5rem;
+	}
+
+	.nftSerialNumber {
+		margin-right: 0.75rem;
+		font-family: 'Andale Mono', monospace;
 	}
 </style>
