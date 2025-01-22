@@ -2,13 +2,7 @@
 	import MultilineText from '$lib/components/MultilineText.svelte'
 	import containerStyles from '$lib/css/container.module.css'
 	import navigationLinkStyles from '$lib/css/navigationLink.module.css'
-	import { contractId, nftTokenId } from '$lib/deployment.js'
-	import HashConnectLoader from '$lib/hashconnect/HashConnectLoader.svelte'
-	import { associateWithToken } from '$lib/hedera/collection/associate'
-	import { claimNftWithExecutor } from '$lib/hedera/collection/claim.js'
 	import { getCoordinateString, getDecimalLatitudeLongitude } from '$lib/swissGrid.js'
-	import Claim from 'lucide-svelte/icons/file-down'
-	import Associate from 'lucide-svelte/icons/handshake'
 
 	let { data } = $props()
 
