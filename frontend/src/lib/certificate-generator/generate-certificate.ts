@@ -204,8 +204,10 @@ export const generateNftCertificate = async (
 	},
 ): Promise<File> => {
 	try {
+		const truncatedMission = mission.length > 50 ? `${mission.slice(0, 50).trim()}..` : mission
+
 		const svgString = await prepareCertificate(qrUrl, {
-			mission: mission,
+			mission: truncatedMission,
 			operationsManager: operationsManager,
 			dateOfWork: dateOfWork,
 			bidiEarned: bidiEarned,
