@@ -28,14 +28,10 @@
 	{#if !isInitialized(hashConnect)}
 		{#if loading}
 			{@render loading({ hashConnect })}
-		{:else}
-			<p>Waiting for HashPack...</p>
 		{/if}
 	{:else if !isPaired(hashConnect)}
 		{#if initialized}
 			{@render initialized({ hashConnect })}
-		{:else}
-			<p>Please connect your wallet using the button at the top of the page.</p>
 		{/if}
 	{:else if !isWithAccountInformation(hashConnect)}
 		{#if paired}
