@@ -1,81 +1,22 @@
 <script lang="ts">
-	import MultilineText from '$lib/components/MultilineText.svelte'
 	import containerStyles from '$lib/css/container.module.css'
 	import navigationLinkStyles from '$lib/css/navigationLink.module.css'
 	import { contractId, nftTokenId } from '$lib/deployment.js'
 	import HashConnectLoader from '$lib/hashconnect/HashConnectLoader.svelte'
 	import { associateWithToken } from '$lib/hedera/collection/associate'
 	import { claimNftWithExecutor } from '$lib/hedera/collection/claim.js'
-	import { getCoordinateString, getDecimalLatitudeLongitude } from '$lib/swissGrid.js'
 	import Claim from 'lucide-svelte/icons/file-down'
 	import Associate from 'lucide-svelte/icons/handshake'
 
 	let { data } = $props()
-
-	const decimalLatitudeLongitude = $derived(
-		data.nft.certificate.coordinates &&
-			getDecimalLatitudeLongitude(data.nft.certificate.coordinates),
-	)
-	const mapSearchParams = $derived.by(() => {
-		const urlSearchParams = new URLSearchParams()
-		if (!decimalLatitudeLongitude) {
-			return urlSearchParams
-		}
-		const bbox = `${
-			decimalLatitudeLongitude.longitude - 0.01
-		},${decimalLatitudeLongitude.latitude - 0.01},${
-			decimalLatitudeLongitude.longitude + 0.01
-		},${decimalLatitudeLongitude.latitude + 0.01}`
-		urlSearchParams.set('bbox', bbox)
-
-		const marker = `${decimalLatitudeLongitude.latitude},${decimalLatitudeLongitude.longitude}`
-		urlSearchParams.set('marker', marker)
-
-		return urlSearchParams
-	})
 </script>
 
 <main class={containerStyles.container}>
-	<h1>{data.nft.name}</h1>
+	<h1>
+		<span class="serialNumber">#{data.nft.serialNumber}</span>
+		{data.nft.name}
+	</h1>
 
-	<time datetime={data.nft.certificate.dateOfWork}>
-		{new Date(data.nft.certificate.dateOfWork).toLocaleDateString()}
-	</time>
-	<p><MultilineText text={data.nft.certificate.typeOfWork} /></p>
-
-	<h2>Effect on biodiversity</h2>
-	<p><MultilineText text={data.nft.certificate.effectOnBiodiversity} /></p>
-
-	{#if data.nft.certificate.coordinates && data.nft.certificate.coordinates.E && data.nft.certificate.coordinates.N}
-		<h2>Location</h2>
-
-		<p>
-			Coordinates:
-
-			{getCoordinateString(data.nft.certificate.coordinates?.E)} / {getCoordinateString(
-				data.nft.certificate.coordinates?.N,
-			)}
-		</p>
-
-		<figure>
-			<iframe
-				title="{data.nft.certificate.typeOfWork} on the map"
-				width="100%"
-				height="auto"
-				src="https://www.openstreetmap.org/export/embed.html?{mapSearchParams.toString()}"
-				class="map"
-			></iframe>
-			<small>
-				<a
-					href="https://www.openstreetmap.org/#map=8/{decimalLatitudeLongitude.latitude}/{decimalLatitudeLongitude.longitude}"
-				>
-					View on OpenStreetMap
-				</a>
-			</small>
-		</figure>
-	{/if}
-
-	<h2>NFT</h2>
 	{#if !data.nft.isClaimed}
 		<HashConnectLoader>
 			{#snippet withAccountInformation({ hashConnect })}
@@ -128,11 +69,8 @@
 		margin-top: 1rem;
 	}
 
-	h2 {
-		margin-top: 2rem;
-	}
-
-	.map {
-		aspect-ratio: 1;
+	.serialNumber {
+		margin-right: 0.75rem;
+		font-family: 'Andale Mono', monospace;
 	}
 </style>
