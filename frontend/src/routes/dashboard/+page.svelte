@@ -80,7 +80,7 @@
 				{/if}
 			{/await}
 
-			<h2>Claimed certificates</h2>
+			<h2 class="claimedCertificatesHeading">Claimed certificates</h2>
 			{#await getNfts( { ledgerId: hashConnect.session.ledgerId, tokenId: nftTokenId, accountId: hashConnect.session.accountId }, )}
 				<p role="status">Loading your certificates...</p>
 			{:then nfts}
@@ -120,6 +120,10 @@
 </main>
 
 <style>
+	.claimedCertificatesHeading {
+		margin-top: 3rem;
+	}
+
 	.nftListContainer {
 		container-name: nfts;
 		container-type: inline-size;
