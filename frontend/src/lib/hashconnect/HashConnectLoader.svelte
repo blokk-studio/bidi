@@ -14,7 +14,7 @@
 	let {
 		loading,
 		initialized,
-		paired,
+		paired = initialized,
 		withAccountInformation = paired,
 	}: {
 		loading?: Snippet<[{ hashConnect: UninitializedReactiveHashConnect }]>
