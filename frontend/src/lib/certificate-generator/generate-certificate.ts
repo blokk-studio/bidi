@@ -1,3 +1,5 @@
+// @ts-expect-error: no type definitions available for opentype
+import opentype from 'opentype.js'
 // @ts-expect-error: getting vercel error cause of unsupported (new) version of node.js was used for @types/qrcode
 import QRCode from 'qrcode'
 
@@ -54,28 +56,39 @@ const getRandomColor = (): string => {
 	return getRandomItem(colors)
 }
 
-const createTextElement = (textData: TextElement): string => `
-  <g font-family="Andale Mono, Arial, sans-serif" text-anchor="start" style="text-transform: uppercase">
-    <text x="180" y="730" font-size="8px" font-weight="400">
-      MISSION: ${textData.mission}
-    </text>
-    <text x="180" y="740" font-size="8px" font-weight="400" style="text-transform: uppercase;;">
-      OPERATIONS MANAGER: ${textData.operationsManager}
-    </text>
-    <text x="180" y="750" font-size="8px" font-weight="400" style="text-transform: uppercase;;">
-      DATE OF WORK: ${textData.dateOfWork}
-    </text>
-    <text x="180" y="760" font-size="8px" font-weight="400" style="text-transform: uppercase;;">
-      NUMBER OF BIDI EARNED: ${textData.bidiEarned}
-    </text>
-    <text x="180" y="770" font-size="8px" style="text-transform: uppercase;;">
-      HEDERA BLOCKCHAIN
-    </text>
-    <text x="180" y="780" font-size="8px" style="text-transform: uppercase;;">
-      BIDIGUT.CH
-    </text>
-  </g>
-`
+let font: opentype.Font
+
+const loadFont = async () => {
+	try {
+		const buffer = await fetch('/fonts/andale-mono.woff').then((res) => res.arrayBuffer())
+		font = opentype.parse(buffer)
+	} catch (error) {
+		console.error('Error loading font:', error)
+		throw new Error('Failed to load font')
+	}
+}
+
+const createTextPathElement = async (textData: TextElement): Promise<string> => {
+	await loadFont()
+
+	if (!font) throw new Error('Font not loaded')
+
+	const textToPath = (text: string, x: number, y: number, fontSize: number): string => {
+		const path = font.getPath(text, x, y, fontSize)
+		return path.toSVG()
+	}
+
+	return `
+    <g style="text-transform: uppercase">
+      ${textToPath(`MISSION: ${textData.mission}`, 180, 730, 8)}
+      ${textToPath(`OPERATIONS MANAGER: ${textData.operationsManager}`, 180, 740, 8)}
+      ${textToPath(`DATE OF WORK: ${textData.dateOfWork}`, 180, 750, 8)}
+      ${textToPath(`NUMBER OF BIDI EARNED: ${textData.bidiEarned}`, 180, 760, 8)}
+      ${textToPath('HEDERA BLOCKCHAIN', 180, 770, 8)}
+      ${textToPath('BIDIGUT.CH', 180, 785, 8)}
+    </g>
+  `
+}
 
 const combineSVGElements = (
 	svgArray: string[],
@@ -175,7 +188,7 @@ const prepareCertificate = async (qrUrl: string, textData: TextElement): Promise
 			fetch(titleDynamicPath).then((res) => res.text()),
 		])
 
-		const textElement = createTextElement(textData)
+		const textElement = await createTextPathElement(textData)
 
 		return combineSVGElements(
 			[selectedInsectA, selectedInsectB, waves, titleFixed, titleDynamic],
@@ -207,10 +220,10 @@ export const generateNftCertificate = async (
 		const truncatedMission = mission.length > 50 ? `${mission.slice(0, 50).trim()}..` : mission
 
 		const svgString = await prepareCertificate(qrUrl, {
-			mission: truncatedMission,
-			operationsManager: operationsManager,
-			dateOfWork: dateOfWork,
-			bidiEarned: bidiEarned,
+			mission: truncatedMission?.toUpperCase(),
+			operationsManager: operationsManager?.toUpperCase(),
+			dateOfWork: dateOfWork?.toUpperCase(),
+			bidiEarned: bidiEarned?.toUpperCase(),
 		})
 
 		const svgBlob = new Blob([svgString], { type: 'image/svg+xml' })
