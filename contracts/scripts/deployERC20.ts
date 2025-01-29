@@ -1,11 +1,8 @@
-// https://docs.hedera.com/hedera/tutorials/token/create-and-transfer-an-nft-using-a-solidity-contract
-
 import * as fs from "fs";
 import * as path from "path";
 import {
   AccountId,
   ContractCreateFlow,
-  ContractExecuteTransaction,
   ContractFunctionParameters,
   AccountBalanceQuery,
 } from "@hashgraph/sdk";
@@ -13,8 +10,10 @@ import { clientSetup } from "./client";
 
 require("dotenv").config();
 
+const collateralTokenId = AccountId.fromString(
+  process.env.COLLATERAL_TOKEN_ID!,
+);
 const operatorId = AccountId.fromString(process.env.HEDERA_ACCOUNT_ID!);
-
 const client = clientSetup();
 
 const main = async () => {
@@ -31,14 +30,13 @@ const main = async () => {
   console.log("\n----- Deployment Configuration -----");
   console.log(`Operator Account: ${operatorId}`);
   console.log(`Network: Testnet`);
-  console.log(`Metadata URI: ${process.env.NFT_METADATA_BASE_URL}`);
   console.log(`HashScan Explorer: https://hashscan.io/testnet`);
 
   // Read Contract
   console.log("\n----- Reading Contract -----");
   const artifactPath = path.join(
     __dirname,
-    "../artifacts/contracts/src/NFTContract.sol/NFTContract.json",
+    "../artifacts/contracts/src/ERC20.sol/Bidi.json",
   );
   const contractJson = JSON.parse(fs.readFileSync(artifactPath, "utf8"));
 
@@ -51,8 +49,14 @@ const main = async () => {
   console.log("\n----- Deploying Contract -----");
   console.log("Initiating contract deployment...");
   const createContract = new ContractCreateFlow()
-    .setGas(4000000) // Increase if revert
-    .setBytecode(bytecode); // Contract bytecode
+    .setGas(1000000)
+    .setBytecode(bytecode)
+    .setConstructorParameters(
+      new ContractFunctionParameters()
+        .addAddress(operatorId.toSolidityAddress()) // initialOwner
+        .addAddress(collateralTokenId.toSolidityAddress()), // _collateralToken (HCHF?)
+    );
+
   const createContractTx = await createContract.execute(client);
   const createContractRx = await createContractTx.getReceipt(client);
   const contractId = createContractRx.contractId;
@@ -66,40 +70,13 @@ const main = async () => {
     throw new Error("No contract was created");
   }
 
-  // Create NFT Collection
-  console.log("\n----- Creating NFT Collection -----");
-  console.log("Initiating NFT collection creation...");
-  const createToken = new ContractExecuteTransaction()
-    .setContractId(contractId)
-    .setGas(1000000) // Increase if revert
-    .setPayableAmount(10) // Increase if revert
-    .setFunction(
-      "createNft",
-      new ContractFunctionParameters()
-        .addString("Fall Collection") // NFT name
-        .addString("LEAF") // NFT symbol
-        .addString("Just a memo") // NFT memo
-        .addInt64(250) // NFT max supply
-        .addInt64(7000000), // Expiration: Needs to be between 6999999 and 8000001
-    );
-  const createTokenTx = await createToken.execute(client);
-  const createTokenRx = await createTokenTx.getRecord(client);
-  const tokenIdSolidityAddr =
-    createTokenRx.contractFunctionResult!.getAddress(0);
-  const tokenId = AccountId.fromSolidityAddress(tokenIdSolidityAddr);
-  console.log(`NFT Collection created successfully!`);
-  console.log(`Collection Details:`);
-  console.log(`   - Token ID: ${tokenId}`);
-  console.log(`   - Name: Fall Collection`);
-  console.log(`   - Symbol: LEAF`);
-  console.log(`   - Max Supply: 250`);
-  console.log(`View Token: https://hashscan.io/testnet/token/${tokenId}`);
-
   // Summary
   console.log("\n----- Deployment Summary -----");
   console.log(`Contract ID: ${contractId}`);
-  console.log(`Token ID: ${tokenId}`);
   console.log(`\nAll operations completed successfully! 🎉\n`);
 };
 
-main();
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

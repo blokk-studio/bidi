@@ -1,7 +1,0 @@
-# Hardhat files
-cache/
-typechain-types/
-artifacts/
-
-# Dependency directories
-node_modules/
