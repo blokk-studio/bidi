@@ -1,0 +1,21 @@
+[
+  "constructor()",
+  "event CallResponseEvent(bool,bytes)",
+  "event MinterAdded(address indexed)",
+  "event MinterRemoved(address indexed)",
+  "function addMinter(address)",
+  "function authorizedMinters(address) view returns (bool)",
+  "function claimNft(address,int64) returns (int256)",
+  "function claimed(int64) view returns (bool)",
+  "function createNft(string,string,string,int64,int64) payable returns (address)",
+  "function getClaimerAddress(int64) view returns (address)",
+  "function isMinter(address) view returns (bool)",
+  "function isNftClaimed(int64) view returns (bool)",
+  "function mintNftForUser(address,bytes[],address) returns (int64)",
+  "function nftClaimRights(int64) view returns (address)",
+  "function owner() view returns (address)",
+  "function redirectForToken(address,bytes) returns (int256, bytes)",
+  "function removeMinter(address)",
+  "function transferFrom(address,address,address,uint256) returns (int64)",
+  "function transferFromNFT(address,address,address,uint256) returns (int64)"
+]

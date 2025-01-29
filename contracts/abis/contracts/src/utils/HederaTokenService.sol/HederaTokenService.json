@@ -1,0 +1,6 @@
+[
+  "event CallResponseEvent(bool,bytes)",
+  "function redirectForToken(address,bytes) returns (int256, bytes)",
+  "function transferFrom(address,address,address,uint256) returns (int64)",
+  "function transferFromNFT(address,address,address,uint256) returns (int64)"
+]
