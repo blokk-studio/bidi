@@ -9,9 +9,8 @@
 
 ## Deploy the contract
 To deploy the project as it is:
-- to clear previous contract generations and artifacts ``pnpm run clear``
+- to clear previous contract generations and artifacts ``pnpm run clean``
 - to compile a fresh contract ``pnpm run compile``
-- before deploying the contract, we have to make sure we added ``NFT_METADATA_URI`` in env variables as future NFT metadata will be saved under that folder. (https://pinata.cloud/ would be a nice place to start..)
 - when everything is ready, run ``pnm run deploy`` and the contract will be deployed, and NFT collection created.
 
 Logs after the deployment:
