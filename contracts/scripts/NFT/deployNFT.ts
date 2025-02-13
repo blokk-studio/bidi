@@ -4,10 +4,9 @@ import {
   AccountId,
   ContractCreateFlow,
   ContractExecuteTransaction,
-  ContractFunctionParameters,
   AccountBalanceQuery,
 } from "@hashgraph/sdk";
-import { clientSetup } from "./client";
+import { clientSetup } from "../helpers/client";
 
 require("dotenv").config();
 
@@ -35,7 +34,7 @@ const main = async () => {
   console.log("\n----- Reading Contract -----");
   const artifactPath = path.join(
     __dirname,
-    "../artifacts/contracts/NFTContract.sol/NFTContract.json",
+    "../../artifacts/contracts/NFTContract.sol/NFTContract.json",
   );
   const contractJson = JSON.parse(fs.readFileSync(artifactPath, "utf8"));
 

@@ -15,7 +15,7 @@ To deploy the project as it is:
 
 Logs after the deployment:
 ```html
-> ts-node scripts/deploy.ts
+> ts-node scripts/deployNFT.ts
 
 Client setup complete.
 

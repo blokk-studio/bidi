@@ -5,7 +5,7 @@ import {
   ContractId,
   Hbar,
 } from "@hashgraph/sdk";
-import { clientSetup } from "../client";
+import { clientSetup } from "../../helpers/client";
 
 // Get command line arguments
 const [contractId, minterId] = process.argv.slice(2);
