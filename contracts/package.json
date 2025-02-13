@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "npx hardhat clean && rm -rf cache artifacts typechain-types",
     "compile": "hardhat compile",
-    "deploy": "ts-node scripts/deploy.ts"
+    "deployNFT": "ts-node scripts/NFT/deployNFT.ts"
   },
   "files": [
     "dist",
