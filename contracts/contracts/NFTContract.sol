@@ -7,7 +7,7 @@ import "./utils/HederaTokenService.sol";
 import "./utils/ExpiryHelper.sol";
 import "./utils/KeyHelper.sol";
 
-contract NFTContract is ExpiryHelper, KeyHelper, HederaTokenService {
+contract NFTContract is ExpiryHelper, HederaTokenService {
     address public owner;
 
     // Mapping to track authorized minters
@@ -59,30 +59,24 @@ contract NFTContract is ExpiryHelper, KeyHelper, HederaTokenService {
         return authorizedMinters[account];
     }
 
-    function createNft(
-        string memory name,
-        string memory symbol,
-        string memory memo,
-        int64 maxSupply,
-        int64 autoRenewPeriod
-    ) external payable onlyOwner returns (address) {
+    function createNft() external payable onlyOwner returns (address) {
         IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](1);
         keys[0] = getSingleKey(KeyType.SUPPLY, KeyValueType.CONTRACT_ID, address(this));
 
         IHederaTokenService.HederaToken memory token;
-        token.name = name;
-        token.symbol = symbol;
-        token.memo = memo;
+        token.name = "Simple NFT";
+        token.symbol = "SNEFT";
+        token.memo = "memo";
         token.treasury = address(this);
         token.tokenSupplyType = true;
-        token.maxSupply = maxSupply;
+        token.maxSupply = 4294967295; // max amount?
         token.tokenKeys = keys;
         token.freezeDefault = false;
-        token.expiry = createAutoRenewExpiry(address(this), autoRenewPeriod);
+        token.expiry = getAutoRenewExpiry(address(this), 7890000);
 
         (int responseCode, address createdToken) = HederaTokenService.createNonFungibleToken(token);
 
-        if(responseCode != HederaResponseCodes.SUCCESS){
+        if (responseCode != HederaResponseCodes.SUCCESS) {
             revert("Failed to create non-fungible token");
         }
         return createdToken;
@@ -92,10 +86,10 @@ contract NFTContract is ExpiryHelper, KeyHelper, HederaTokenService {
         address token,
         bytes[] memory metadata,
         address allowedClaimer
-    ) external onlyMinter returns(int64) {
+    ) external onlyMinter returns (int64) {
         (int response, , int64[] memory serial) = HederaTokenService.mintToken(token, 0, metadata);
 
-        if(response != HederaResponseCodes.SUCCESS){
+        if (response != HederaResponseCodes.SUCCESS) {
             revert("Failed to mint non-fungible token");
         }
 
@@ -108,7 +102,7 @@ contract NFTContract is ExpiryHelper, KeyHelper, HederaTokenService {
     function claimNft(
         address token,
         int64 serial
-    ) external returns(int) {
+    ) external returns (int) {
         // Check if the caller is the allowed claimer for this NFT
         require(nftClaimRights[serial] == msg.sender, "You are not authorized to claim this NFT");
         // Check if the NFT hasn't been claimed yet
@@ -116,7 +110,7 @@ contract NFTContract is ExpiryHelper, KeyHelper, HederaTokenService {
 
         int response = HederaTokenService.transferNFT(token, address(this), msg.sender, serial);
 
-        if(response != HederaResponseCodes.SUCCESS){
+        if (response != HederaResponseCodes.SUCCESS) {
             revert("Failed to transfer non-fungible token");
         }
 
