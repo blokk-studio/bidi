@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.28;
 
-import './utils/HederaResponseCodes.sol';
-import './utils/IHederaTokenService.sol';
-import './utils/HederaTokenService.sol';
-import './utils/ExpiryHelper.sol';
-import './utils/IERC20.sol';
+import "@openzeppelin/contracts/access/Ownable.sol";
+import {ExpiryHelper} from './utils/ExpiryHelper.sol';
+import {HederaResponseCodes} from './utils/HederaResponseCodes.sol';
+import {HederaTokenService} from './utils/HederaTokenService.sol';
+import {IERC20} from './utils/IERC20.sol';
+import {IHederaTokenService} from './utils/IHederaTokenService.sol';
 
 /**
  * @title TokenCreator
  * @dev A contract for creating and managing fungible tokens on the Hedera network with built-in fee mechanisms
  * and collateral backing. This contract allows for token creation, minting, unwrapping, and fee collection.
  */
-contract TokenCreator is ExpiryHelper, HederaTokenService {
+contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
     address private _tokenAddress;
     address private _collateralTokenAddress;
-    address private _owner;
     address private _feeRecipient;
     uint256 private _lockedCollateral;
 
@@ -29,17 +29,8 @@ contract TokenCreator is ExpiryHelper, HederaTokenService {
     /**
      * @dev Constructor sets the contract owner and initial fee recipient as the deployer
      */
-    constructor() {
-        _owner = msg.sender;
+    constructor() Ownable(msg.sender) {
         _feeRecipient = msg.sender;
-    }
-
-    /**
-     * @dev Modifier to restrict function access to contract owner only
-     */
-    modifier onlyOwner() {
-        require(msg.sender == _owner, "Caller is not the owner");
-        _;
     }
 
     /**
@@ -95,21 +86,21 @@ contract TokenCreator is ExpiryHelper, HederaTokenService {
      * @dev Retrieves current contract state information
      * @return tokenAddress Address of the created token
      * @return collateralTokenAddress Address of the collateral token
-     * @return owner Address of the contract owner
+     * @return contractOwner Address of the contract owner
      * @return feeRecipient Address where fees are sent
      * @return lockedCollateral Amount of collateral currently locked in contract
      */
     function getContractInfo() external view returns (
         address tokenAddress,
         address collateralTokenAddress,
-        address owner,
+        address contractOwner,
         address feeRecipient,
         uint256 lockedCollateral
     ) {
         return (
             _tokenAddress,
             _collateralTokenAddress,
-            _owner,
+            owner(),
             _feeRecipient,
             _lockedCollateral
         );
@@ -120,7 +111,7 @@ contract TokenCreator is ExpiryHelper, HederaTokenService {
      * @param token Address of the collateral token
      * @return responseCode Response code from the Hedera Token Service
      */
-    function setCollateralToken(address token) external returns (int) {
+    function setCollateralToken(address token) external onlyOwner returns (int) {
         int256 responseCode = HederaTokenService.associateToken(address(this), token);
         _collateralTokenAddress = token;
 
@@ -220,7 +211,7 @@ contract TokenCreator is ExpiryHelper, HederaTokenService {
      */
     function collectFees() external {
         require(
-            msg.sender == _owner || msg.sender == _feeRecipient,
+            msg.sender == owner() || msg.sender == _feeRecipient,
             "Caller is not owner or fee recipient"
         );
 
