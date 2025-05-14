@@ -107,6 +107,41 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
     }
 
     /**
+     * @dev Returns the address of the created token
+     */
+    function getTokenAddress() public view returns (address) {
+        return _tokenAddress;
+    }
+
+    /**
+     * @dev Returns the address of the collateral token
+     */
+    function getCollateralTokenAddress() public view returns (address) {
+        return _collateralTokenAddress;
+    }
+
+    /**
+     * @dev Returns the contract owner address
+     */
+    function getContractOwner() public view returns (address) {
+        return owner();
+    }
+
+    /**
+     * @dev Returns the fee recipient address
+     */
+    function getFeeRecipient() public view returns (address) {
+        return _feeRecipient;
+    }
+
+    /**
+     * @dev Returns the amount of locked collateral
+     */
+    function getLockedCollateral() public view returns (uint256) {
+        return _lockedCollateral;
+    }
+
+    /**
      * @dev Sets the collateral token address and associates it with this contract
      * @param token Address of the collateral token
      * @return responseCode Response code from the Hedera Token Service
