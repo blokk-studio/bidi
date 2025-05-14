@@ -40,7 +40,7 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
      * @notice Sets up a 1% fractional fee with min/max limits
      * @notice Contract maintains supply and fee management permissions
      */
-    function createFungible() external payable returns (address createdTokenAddress) {
+    function createFungible() onlyOwner external payable returns (address createdTokenAddress) {
 
         IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](2);
         keys[0] = getSingleKey(KeyType.SUPPLY, KeyValueType.CONTRACT_ID, address(this));
@@ -146,7 +146,7 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
      * @param token Address of the collateral token
      * @return responseCode Response code from the Hedera Token Service
      */
-    function setCollateralToken(address token) external onlyOwner returns (int) {
+    function setCollateralToken(address token) onlyOwner external returns (int) {
         int256 responseCode = HederaTokenService.associateToken(address(this), token);
         _collateralTokenAddress = token;
 
