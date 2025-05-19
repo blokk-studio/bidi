@@ -8,6 +8,20 @@ import {HederaTokenService} from './utils/HederaTokenService.sol';
 import {IERC20} from './utils/IERC20.sol';
 import {IHederaTokenService} from './utils/IHederaTokenService.sol';
 
+error ZeroAddressFeeRecipient();
+error SameFeeRecipient(address currentRecipient);
+error CollateralTransferFailed(int responseCode);
+error MintFailed(int responseCode);
+error FinalTransferFailed(int responseCode);
+error TokenCreationFailed(int responseCode);
+error BidiTransferFailed(int responseCode);
+error BurnFailed(int responseCode);
+error CollateralReturnFailed(int responseCode);
+error NotAuthorized(address sender, address owner, address feeRecipient);
+error NoFeesToCollect();
+error FeeTransferFailed(int responseCode);
+error BalanceTooLarge(uint256 balance, uint256 maxAllowed);
+
 /**
  * @title TokenCreator
  * @dev A contract for creating and managing fungible tokens on the Hedera network with built-in fee mechanisms
@@ -73,7 +87,7 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
         );
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert("Token creation failed");
+            revert TokenCreationFailed(responseCode);
         }
 
         _tokenAddress = tokenAddress;
@@ -161,8 +175,8 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
      * @notice Cannot set to zero address or current fee recipient
      */
     function setFeeRecipient(address newFeeRecipient) external onlyOwner {
-        require(newFeeRecipient != address(0), "New fee recipient is zero address");
-        require(newFeeRecipient != _feeRecipient, "New fee recipient is same as current");
+        if (newFeeRecipient == address(0)) revert ZeroAddressFeeRecipient();
+        if (newFeeRecipient == _feeRecipient) revert SameFeeRecipient(_feeRecipient);
 
         address oldFeeRecipient = _feeRecipient;
         _feeRecipient = newFeeRecipient;
@@ -184,7 +198,7 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
             address(this),
             amount
         );
-        if (transfer != HederaResponseCodes.SUCCESS) revert("Collateral coin transfer failed");
+        if (transfer != HederaResponseCodes.SUCCESS) revert CollateralTransferFailed(transfer);
         _lockedCollateral += uint256(uint64(amount));
 
         (int responseCode,,) = HederaTokenService.mintToken(
@@ -192,7 +206,7 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
             uint64(amount),
             new bytes[](0)
         );
-        if (responseCode != HederaResponseCodes.SUCCESS) revert("Mint failed");
+        if (responseCode != HederaResponseCodes.SUCCESS) revert MintFailed(responseCode);
 
         int transferMinted = HederaTokenService.transferToken(
             _tokenAddress,
@@ -200,7 +214,7 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
             receiver,
             amount
         );
-        if (transferMinted != HederaResponseCodes.SUCCESS) revert("Final transfer to wallet failed");
+        if (transferMinted != HederaResponseCodes.SUCCESS) revert FinalTransferFailed(transferMinted);
         emit TOKEN_MINTED(receiver, amount);
     }
 
@@ -217,14 +231,14 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
             address(this),
             amount
         );
-        if (transferBidi != HederaResponseCodes.SUCCESS) revert("BIDI token transfer failed");
+        if (transferBidi != HederaResponseCodes.SUCCESS) revert BidiTransferFailed(transferBidi);
 
         (int burnResponse,) = HederaTokenService.burnToken(
             _tokenAddress,
             uint64(amount),
             new int64[](0)
         );
-        if (burnResponse != HederaResponseCodes.SUCCESS) revert("Burn failed");
+        if (burnResponse != HederaResponseCodes.SUCCESS) revert BurnFailed(burnResponse);
 
         int transferCollateral = HederaTokenService.transferToken(
             _collateralTokenAddress,
@@ -232,7 +246,7 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
             msg.sender,
             amount
         );
-        if (transferCollateral != HederaResponseCodes.SUCCESS) revert("Collateral return failed");
+        if (transferCollateral != HederaResponseCodes.SUCCESS) revert CollateralReturnFailed(transferCollateral);
 
         _lockedCollateral -= uint256(uint64(amount));
         emit TOKEN_UNWRAPPED(msg.sender, amount);
@@ -245,15 +259,14 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
      * @notice Reverts if no fees are available to collect
      */
     function collectFees() external {
-        require(
-            msg.sender == owner() || msg.sender == _feeRecipient,
-            "Caller is not owner or fee recipient"
-        );
+        if (msg.sender != owner() && msg.sender != _feeRecipient) {
+            revert NotAuthorized(msg.sender, owner(), _feeRecipient);
+        }
 
         uint256 rawBalance = IERC20(_tokenAddress).balanceOf(address(this));
-        require(rawBalance <= uint64(type(int64).max), "Balance too large for int64");
+        if (rawBalance > uint64(type(int64).max)) revert BalanceTooLarge(rawBalance, uint64(type(int64).max));
         int64 balance = int64(uint64(rawBalance));
-        require(balance > 0, "No fees to collect");
+        if (balance <= 0) revert NoFeesToCollect();
 
         int response = HederaTokenService.transferToken(
             _tokenAddress,
@@ -262,7 +275,7 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
             balance
         );
 
-        require(response == HederaResponseCodes.SUCCESS, "Fee transfer failed");
+        if (response != HederaResponseCodes.SUCCESS) revert FeeTransferFailed(response);
         emit FEES_COLLECTED(_feeRecipient, balance);
     }
 }
