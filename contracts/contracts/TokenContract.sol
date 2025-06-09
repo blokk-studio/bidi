@@ -21,6 +21,8 @@ error NotAuthorized(address sender, address owner, address feeRecipient);
 error NoFeesToCollect();
 error FeeTransferFailed(int responseCode);
 error BalanceTooLarge(uint256 balance, uint256 maxAllowed);
+error NoWrongfullySentTokensToRecover();
+
 
 /**
  * @title TokenCreator
@@ -39,6 +41,7 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
     event TOKEN_CREATED(address indexed tokenAddress, string name, string symbol);
     event TOKEN_MINTED(address indexed receiver, int64 amount);
     event TOKEN_UNWRAPPED(address indexed sender, int64 amount);
+    event EMERGENCY_TOKEN_RECOVERY(address indexed tokenAddress, address indexed recipient, int64 amount);
 
     /**
      * @dev Constructor sets the contract owner and initial fee recipient as the deployer
@@ -277,5 +280,51 @@ contract TokenCreator is ExpiryHelper, HederaTokenService, Ownable {
 
         if (response != HederaResponseCodes.SUCCESS) revert FeeTransferFailed(response);
         emit FEES_COLLECTED(_feeRecipient, balance);
+    }
+
+    /**
+     * @dev Emergency function to recover any wrongly sent tokens to the contract
+     * @param tokenAddress Address of the token to recover
+     * @param recipient Address to send the recovered tokens to
+     * @notice Only callable by contract owner
+     * @notice Cannot recover collateral tokens that are backing minted tokens
+     * @notice Cannot recover main token fees (use collectFees instead)
+     */
+    function emergencyTokenRecovery(address tokenAddress, address recipient) external onlyOwner {
+        if (recipient == address(0)) revert ZeroAddressFeeRecipient();
+
+        uint256 rawBalance = IERC20(tokenAddress).balanceOf(address(this));
+        if (rawBalance == 0) revert NoWrongfullySentTokensToRecover();
+
+        if (tokenAddress == _tokenAddress) {
+            revert NoWrongfullySentTokensToRecover();
+        }
+
+        uint256 transferAmount = rawBalance;
+        if (tokenAddress == _collateralTokenAddress) {
+            if (rawBalance <= _lockedCollateral) {
+                revert NoWrongfullySentTokensToRecover();
+            }
+            transferAmount = rawBalance - _lockedCollateral;
+        }
+
+        if (transferAmount > uint64(type(int64).max)) {
+            revert BalanceTooLarge(transferAmount, uint64(type(int64).max));
+        }
+
+        int64 amount = int64(uint64(transferAmount));
+
+        int response = HederaTokenService.transferToken(
+            tokenAddress,
+            address(this),
+            recipient,
+            amount
+        );
+
+        if (response != HederaResponseCodes.SUCCESS) {
+            revert FeeTransferFailed(response);
+        }
+
+        emit EMERGENCY_TOKEN_RECOVERY(tokenAddress, recipient, amount);
     }
 }
